@@ -1,0 +1,23 @@
+Overview
+============
+
+MultiScaleOT is a library for numerical optimal transport implemented in C++. A front-end for Python 3 with numpy and scipy is available (implemented with pybind11).
+
+**This is a very early of the library and the documentation. No warranty is provided, use with caution.**
+
+Its primary functionality are coarse-to-fine algorithms for discrete optimal transport problems in the linear programming formulation due to Kantorovich.
+The two main algorithms are:
+
+    * **ShortCut**: the sparse multi-scale linear program solver described in [Schmitzer 2016]
+    * **SparseSinkhorn**: the stabilized sparse Sinkhorn algorithm based on entropy regularization, as described in [Schmitzer 2019]
+
+In the current version the focus of development lies on the SparseSinkhorn algorithm. For ShortCut there is currently no Python front-end support.
+
+In this early stage there is no extensive documentation available. It is recommended to try to complete the installation and then look at some of the example files.
+Note that this is highly experimental software. It does very few safety checks on the users input data and will likely cause a segmentation fault if invalid data is provided. See also Disclaimer & License.
+
+References
+---------------
+
+* **[Schmitzer 2016]:** B. Schmitzer: A Sparse Multi-Scale Algorithm for Dense Optimal Transport, *J. Math. Imaging Vis. 56*, 238-259, 2016
+* **[Schmitzer 2019]:** B. Schmitzer: Stabilized Sparse Scaling Algorithms for Entropy Regularized Transport Problems, *SIAM J. Sci. Comput. 41*, A1443-A1481, 2019

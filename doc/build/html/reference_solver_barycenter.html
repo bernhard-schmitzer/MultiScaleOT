@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Barycenters &mdash; MultiScaleOT 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Periphery functions" href="reference_periphery.html" />
+    <link rel="prev" title="Sinkorn solver (unbalanced)" href="reference_solver_unbalanced.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> MultiScaleOT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="reference.html">Module reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference_multiscale.html">Multiscale representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_solver_aux.html">Auxillary objects for Sinkhorn solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_solver_standard.html">Sinkorn solver (standard)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_solver_unbalanced.html">Sinkorn solver (unbalanced)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Barycenters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_periphery.html">Periphery functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MultiScaleOT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="reference.html">Module reference</a> &raquo;</li>
+        
+      <li>Barycenters</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/reference_solver_barycenter.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="barycenters">
+<h1>Barycenters<a class="headerlink" href="#barycenters" title="Permalink to this headline">¶</a></h1>
+<p>Implementations for optimal transport barycenters are still particularly experimental.
+They work in principle but they do not yet provide mathematically sound sub-optimality control for truncation.
+Also the setup of such problems is considerably more complex.</p>
+<dl class="class">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TMultiScaleSetupBarycenterContainer</code><a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: MultiScaleOT.TMultiScaleSetupBarycenterContainer) -&gt; None</p></li>
+<li><p>__init__(self: MultiScaleOT.TMultiScaleSetupBarycenterContainer, nMarginals: int) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.getAlpha">
+<code class="sig-name descname">getAlpha</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetupBarycenterContainer</em>, <em class="sig-param">nMarginal: int</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.getAlpha" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.getBeta">
+<code class="sig-name descname">getBeta</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetupBarycenterContainer</em>, <em class="sig-param">nMarginal: int</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.getBeta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.setAlpha">
+<code class="sig-name descname">setAlpha</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetupBarycenterContainer, alpha: numpy.ndarray[float64], nMarginal: int, nLayer: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.setAlpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set dual variable alpha of marginal nMarginal at layer nLayer to alpha and then propagates values to all coarser layers by maximization over child nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> – 1d double array with new values for dual variable. Size needs to equal number of cells in that layer.</p></li>
+<li><p><strong>nMarginal</strong> – id of marginal on which dual variable is to be set.</p></li>
+<li><p><strong>nLayer</strong> – id of layer on which dual variable is to be set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.setBeta">
+<code class="sig-name descname">setBeta</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetupBarycenterContainer, beta: numpy.ndarray[float64], nMarginal: int, nLayer: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.setBeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set dual variable beta of marginal nMarginal at layer nLayer to beta and then propagates values to all coarser layers by maximization over child nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>beta</strong> – 1d double array with new values for dual variable. Size needs to equal number of cells in that layer.</p></li>
+<li><p><strong>nMarginal</strong> – id of marginal on which dual variable is to be set.</p></li>
+<li><p><strong>nLayer</strong> – id of layer on which dual variable is to be set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.setCenterMarginal">
+<code class="sig-name descname">setCenterMarginal</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetupBarycenterContainer</em>, <em class="sig-param">arg0: MultiScaleOT.TMultiScaleSetup</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.setCenterMarginal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.setCostFunctionProvider">
+<code class="sig-name descname">setCostFunctionProvider</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetupBarycenterContainer</em>, <em class="sig-param">nMarginal: int</em>, <em class="sig-param">costFunctionProvider: THierarchicalCostFunctionProvider</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.setCostFunctionProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set nMarginal-th cost function in barycenter problem to costFunctionProvider.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.setMarginal">
+<code class="sig-name descname">setMarginal</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetupBarycenterContainer</em>, <em class="sig-param">nMarginal: int</em>, <em class="sig-param">MultiScaleSetup: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">weight: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.setMarginal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set nMarginal-th marginal in barycenter problem to MultiScaleSetup with weight-coefficient weight.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetupBarycenterContainer.setupDuals">
+<code class="sig-name descname">setupDuals</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetupBarycenterContainer</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetupBarycenterContainer.setupDuals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TSinkhornSolverBarycenter</code><a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solver for optimal transport barycenter.</p>
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">epsScalingHandler: MultiScaleOT.TEpsScalingHandler</em>, <em class="sig-param">layerCoarsest: int</em>, <em class="sig-param">layerFinest: int</em>, <em class="sig-param">errorGoal: float</em>, <em class="sig-param">MultiScaleSetupBarycenterContainer: MultiScaleOT.TMultiScaleSetupBarycenterContainer</em>, <em class="sig-param">cfg: MultiScaleOT.TSinkhornSolverParameters = &lt;MultiScaleOT.TSinkhornSolverParameters object at 0x7fb7381bce70&gt;</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.findKernelLine">
+<code class="sig-name descname">findKernelLine</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">nMarginal: int</em>, <em class="sig-param">layerFinest: int</em>, <em class="sig-param">a: int</em>, <em class="sig-param">mode: int</em>, <em class="sig-param">slack: float</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.findKernelLine" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nMarginal</strong> – index of reference marginal</p></li>
+<li><p><strong>layerFinest</strong> – index of desired layer</p></li>
+<li><p><strong>a</strong> – index of kernel line to be determined</p></li>
+<li><p><strong>mode</strong> – 0: rows, 1: columns</p></li>
+<li><p><strong>slack</strong> – threshold below maximal value up to which entries are included</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.getCostFunctionProvider">
+<code class="sig-name descname">getCostFunctionProvider</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">arg0: int</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.THierarchicalCostFunctionProvider<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.getCostFunctionProvider" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.getKernel">
+<code class="sig-name descname">getKernel</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">arg0: int</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.TKernelMatrix<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.getKernel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.getKernelCSRData">
+<code class="sig-name descname">getKernelCSRData</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">arg0: int</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.TSparseCSRContainer<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.getKernelCSRData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.getKernelCSRDataTuple">
+<code class="sig-name descname">getKernelCSRDataTuple</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">arg0: int</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.getKernelCSRDataTuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.getKernelPosData">
+<code class="sig-name descname">getKernelPosData</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">arg0: int</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.TSparsePosContainer<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.getKernelPosData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.getKernelPosDataTuple">
+<code class="sig-name descname">getKernelPosDataTuple</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">arg0: int</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.getKernelPosDataTuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.getU">
+<code class="sig-name descname">getU</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">arg0: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.getU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenter.getV">
+<code class="sig-name descname">getV</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenter</em>, <em class="sig-param">arg0: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenter.getV" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenterKLMarginals">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TSinkhornSolverBarycenterKLMarginals</code><a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenterKLMarginals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solver for optimal transport barycenter with KL soft marginals.</p>
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenterKLMarginals.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenterKLMarginals</em>, <em class="sig-param">epsScalingHandler: MultiScaleOT.TEpsScalingHandler</em>, <em class="sig-param">layerCoarsest: int</em>, <em class="sig-param">layerFinest: int</em>, <em class="sig-param">errorGoal: float</em>, <em class="sig-param">MultiScaleSetupBarycenterContainer: MultiScaleOT.TMultiScaleSetupBarycenterContainer</em>, <em class="sig-param">kappa: float</em>, <em class="sig-param">cfg: MultiScaleOT.TSinkhornSolverParameters = &lt;MultiScaleOT.TSinkhornSolverParameters object at 0x7fb738384530&gt;</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenterKLMarginals.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverBarycenterKLMarginals.getScorePrimal">
+<code class="sig-name descname">getScorePrimal</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverBarycenterKLMarginals</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBarycenterKLMarginals.getScorePrimal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="reference_periphery.html" class="btn btn-neutral float-right" title="Periphery functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="reference_solver_unbalanced.html" class="btn btn-neutral float-left" title="Sinkorn solver (unbalanced)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Bernhard Schmitzer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
