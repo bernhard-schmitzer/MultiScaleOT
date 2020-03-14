@@ -157,14 +157,14 @@
             
   <div class="section" id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
-<p>MultiScaleOT is a library for numerical optimal transport implemented in C++. A front-end for Python 3 with numpy and scipy is available (implemented with pybind11).</p>
+<p>MultiScaleOT is a library for numerical optimal transport implemented in C++. A front-end for Python 3 with numpy and scipy is available (implemented with <a class="reference external" href="https://github.com/pybind/pybind11">pybind11</a>).</p>
 <p><strong>This is a very early version of the library and the documentation. No warranty is provided, use with caution.</strong></p>
 <p>Its primary functionality are coarse-to-fine algorithms for discrete optimal transport problems in the linear programming formulation due to Kantorovich.
 The two main algorithms are:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><strong>ShortCut</strong>: the sparse multi-scale linear program solver described in [Schmitzer 2016]</p></li>
-<li><p><strong>SparseSinkhorn</strong>: the stabilized sparse Sinkhorn algorithm based on entropy regularization, as described in [Schmitzer 2019]</p></li>
+<li><p><strong>ShortCut</strong>: the sparse multi-scale linear program solver described in <a class="reference internal" href="#schmitzer2016" id="id1"><span>[Schmitzer2016]</span></a></p></li>
+<li><p><strong>SparseSinkhorn</strong>: the stabilized sparse Sinkhorn algorithm based on entropy regularization, as described in <a class="reference internal" href="#schmitzer2019" id="id2"><span>[Schmitzer2019]</span></a></p></li>
 </ul>
 </div></blockquote>
 <p>In the current version the focus of development lies on the SparseSinkhorn algorithm. For ShortCut there is currently no Python front-end support.</p>
@@ -172,10 +172,18 @@ The two main algorithms are:</p>
 Note that this is highly experimental software. It does very few safety checks on the users input data and will likely cause a segmentation fault if invalid data is provided. See also Disclaimer &amp; License.</p>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p><strong>[Schmitzer 2016]:</strong> B. Schmitzer: A Sparse Multi-Scale Algorithm for Dense Optimal Transport, <em>J. Math. Imaging Vis. 56</em>, 238-259, 2016</p></li>
-<li><p><strong>[Schmitzer 2019]:</strong> B. Schmitzer: Stabilized Sparse Scaling Algorithms for Entropy Regularized Transport Problems, <em>SIAM J. Sci. Comput. 41</em>, A1443-A1481, 2019</p></li>
-</ul>
+<dl class="citation">
+<dt class="label" id="schmitzer2016"><span class="brackets"><a class="fn-backref" href="#id1">Schmitzer2016</a></span></dt>
+<dd><ol class="upperalpha simple" start="2">
+<li><p>Schmitzer: A Sparse Multi-Scale Algorithm for Dense Optimal Transport, <em>J. Math. Imaging Vis. 56</em>, 238-259, 2016</p></li>
+</ol>
+</dd>
+<dt class="label" id="schmitzer2019"><span class="brackets"><a class="fn-backref" href="#id2">Schmitzer2019</a></span></dt>
+<dd><ol class="upperalpha simple" start="2">
+<li><p>Schmitzer: Stabilized Sparse Scaling Algorithms for Entropy Regularized Transport Problems, <em>SIAM J. Sci. Comput. 41</em>, A1443-A1481, 2019</p></li>
+</ol>
+</dd>
+</dl>
 </div>
 </div>
 

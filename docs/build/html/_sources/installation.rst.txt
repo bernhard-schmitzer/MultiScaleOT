@@ -69,6 +69,23 @@ Compilation from source
     * some headers in *MultiScaleOT/include*,
     * and some pure C++ examples in *MultiScaleOT/examples*.
 
+.. _installation-google-colab:
+
+Google colab
+-------------------
+
+It is possible to install and test the library on `Google colab <https://colab.research.google.com/>`_. For this, run the following commands in the python notebook:
+
+* Install **eigen3** library headers::
+
+    !apt install libeigen3-dev
+
+* Install **MultiScaleOT** via pip::
+
+    !pip install MultiScaleOT
+
+After this you should be able to test some of the :doc:`examples <auto_examples/index>`.
+
 ..
     use_cplex
     CPLEX_LIBRARY: Location of CPLEX binaries for linking

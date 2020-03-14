@@ -1,7 +1,9 @@
 MultiScaleOT: Documentation
 =====================================
 
-MultiScaleOT is a library for numerical optimal transport implemented in C++. A front-end for Python 3 with numpy and scipy is available (implemented with pybind11).
+MultiScaleOT is a library for numerical optimal transport implemented in C++. A front-end for Python 3 with numpy and scipy is available (implemented with `pybind11 <https://github.com/pybind/pybind11>`_).
+
+This project and its documentation are far from complete and still under construction. If you have any questions, feel free to contact me.
 
 .. toctree::
    :maxdepth: 2

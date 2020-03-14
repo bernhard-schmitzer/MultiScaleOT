@@ -8,6 +8,7 @@ Examples
 ==================
 
 Below is a list of examples for various workflows using the MultiScaleOT library from python.
+A convenient way to try them is via :ref:`Google colab <installation-google-colab>`.
 
 
 
