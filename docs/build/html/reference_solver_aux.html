@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Auxillary objects for Sinkhorn solvers &mdash; MultiScaleOT 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sinkorn solver (standard)" href="reference_solver_standard.html" />
+    <link rel="prev" title="Multiscale representation" href="reference_multiscale.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> MultiScaleOT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="reference.html">Module reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference_multiscale.html">Multiscale representation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Auxillary objects for Sinkhorn solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_solver_standard.html">Sinkorn solver (standard)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_solver_unbalanced.html">Sinkorn solver (unbalanced)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_solver_barycenter.html">Barycenters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_periphery.html">Periphery functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MultiScaleOT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="reference.html">Module reference</a> &raquo;</li>
+        
+      <li>Auxillary objects for Sinkhorn solvers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/reference_solver_aux.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="auxillary-objects-for-sinkhorn-solvers">
+<h1>Auxillary objects for Sinkhorn solvers<a class="headerlink" href="#auxillary-objects-for-sinkhorn-solvers" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">THierarchicalCostFunctionProvider</code><a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract base class of cost function object. Does not expose a constructor.</p>
+<dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider.getCost">
+<code class="sig-name descname">getCost</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider</em>, <em class="sig-param">layer: int</em>, <em class="sig-param">xId: int</em>, <em class="sig-param">yId: int</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider.getCost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes lower bound on cost between points with numbers &lt;xId&gt; and &lt;yId&gt; at layer &lt;layer&gt;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider.getCostAsym">
+<code class="sig-name descname">getCostAsym</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider</em>, <em class="sig-param">xLayer: int</em>, <em class="sig-param">xId: int</em>, <em class="sig-param">yLayer: int</em>, <em class="sig-param">yId: int</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider.getCostAsym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes lower bound on cost between points with numbers &lt;xId&gt; at layer &lt;xLayer&gt; and &lt;yId&gt; at layer &lt;yLayer&gt;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider.getCostEff">
+<code class="sig-name descname">getCostEff</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider</em>, <em class="sig-param">layer: int</em>, <em class="sig-param">xId: int</em>, <em class="sig-param">yId: int</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider.getCostEff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes lower bound on effective cost (i.e. cost reduced by dual variables) between points with numbers &lt;xId&gt; and &lt;yId&gt; at layer &lt;layer&gt;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider.getCostEffAsym">
+<code class="sig-name descname">getCostEffAsym</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider</em>, <em class="sig-param">xLayer: int</em>, <em class="sig-param">xId: int</em>, <em class="sig-param">yLayer: int</em>, <em class="sig-param">yId: int</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider.getCostEffAsym" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes lower bound on effective cost (i.e. cost reduced by dual variables) between points with numbers &lt;xId&gt; at layer &lt;xLayer&gt; and &lt;yId&gt; at layer &lt;yLayer&gt;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider.setLayerBottom">
+<code class="sig-name descname">setLayerBottom</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider</em>, <em class="sig-param">layerBottom: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider.setLayerBottom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets number of layer which should be considered as finest level.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">THierarchicalCostFunctionProvider_SquaredEuclidean</code><a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the squared Euclidean distance cost function.</p>
+<dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean</em>, <em class="sig-param">MultiScaleSetupX: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">MultiScaleSetupY: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">WFmode: bool = False</em>, <em class="sig-param">WFlenscale: float = 1.0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>MultiScaleSetupX</strong> – TMultiScaleSetup instance describing first marginal</p></li>
+<li><p><strong>MultiScaleSetupY</strong> – TMultiScaleSetup instance describing second marginal</p></li>
+<li><p><strong>WFmode</strong> – whether Hellinger–Kantorovich mode should be activated</p></li>
+<li><p><strong>WFlenscale</strong> – trade-off weight between transport and mass change. Maximal transport distance is WFlenscale*pi/2.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setScale">
+<code class="sig-name descname">setScale</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean</em>, <em class="sig-param">arg0: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setScale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setWFScale">
+<code class="sig-name descname">setWFScale</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean</em>, <em class="sig-param">arg0: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setWFScale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="MultiScaleOT.TEpsScalingHandler">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TEpsScalingHandler</code><a class="headerlink" href="#MultiScaleOT.TEpsScalingHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class for setting up and managing a schedule for epsilon scaling.</p>
+<dl class="method">
+<dt id="MultiScaleOT.TEpsScalingHandler.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TEpsScalingHandler</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#MultiScaleOT.TEpsScalingHandler.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TEpsScalingHandler.setupExplicit">
+<code class="sig-name descname">setupExplicit</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TEpsScalingHandler</em>, <em class="sig-param">epsLists: list</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TEpsScalingHandler.setupExplicit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TEpsScalingHandler.setupGeometricMultiLayerA">
+<code class="sig-name descname">setupGeometricMultiLayerA</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TEpsScalingHandler</em>, <em class="sig-param">nLayers: int</em>, <em class="sig-param">epsStart: float</em>, <em class="sig-param">epsTarget: float</em>, <em class="sig-param">epsSteps: int</em>, <em class="sig-param">boxScale: float</em>, <em class="sig-param">layerExponent: float</em>, <em class="sig-param">layerCoarsest: int</em>, <em class="sig-param">overlap: bool</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#MultiScaleOT.TEpsScalingHandler.setupGeometricMultiLayerA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TEpsScalingHandler.setupGeometricMultiLayerB">
+<code class="sig-name descname">setupGeometricMultiLayerB</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TEpsScalingHandler</em>, <em class="sig-param">nLayers: int</em>, <em class="sig-param">epsBase: float</em>, <em class="sig-param">layerFactor: float</em>, <em class="sig-param">layerSteps: int</em>, <em class="sig-param">stepsFinal: int</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#MultiScaleOT.TEpsScalingHandler.setupGeometricMultiLayerB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TEpsScalingHandler.setupGeometricSingleLayer">
+<code class="sig-name descname">setupGeometricSingleLayer</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TEpsScalingHandler</em>, <em class="sig-param">nLayers: int</em>, <em class="sig-param">epsStart: float</em>, <em class="sig-param">epsTarget: float</em>, <em class="sig-param">epsSteps: int</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#MultiScaleOT.TEpsScalingHandler.setupGeometricSingleLayer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="MultiScaleOT.TSinkhornSolverParameters">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TSinkhornSolverParameters</code><a class="headerlink" href="#MultiScaleOT.TSinkhornSolverParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bundle all smaller parameters of the Sinkhorn solver objects.</p>
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverParameters.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverParameters</em>, <em class="sig-param">maxIterations: int = 100000</em>, <em class="sig-param">innerIterations: int = 100</em>, <em class="sig-param">maxAbsorptionLoops: int = 100</em>, <em class="sig-param">absorption_scalingBound: float = 1000.0</em>, <em class="sig-param">absorption_scalingLowerBound: float = 1000.0</em>, <em class="sig-param">truncation_thresh: float = 1e-20</em>, <em class="sig-param">refineKernel: bool = False</em>, <em class="sig-param">generateFinalKernel: bool = True</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverParameters.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="reference_solver_standard.html" class="btn btn-neutral float-right" title="Sinkorn solver (standard)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="reference_multiscale.html" class="btn btn-neutral float-left" title="Multiscale representation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Bernhard Schmitzer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
