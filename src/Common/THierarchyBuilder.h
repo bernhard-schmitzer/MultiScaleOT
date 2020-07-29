@@ -25,9 +25,9 @@ public:
 
 class THierarchyBuilder {
 public:
-	static int CM_Tree;
-	static int CM_Grid;
-	static double boxTolerance;
+	static const int CM_Tree;
+	static const int CM_Grid;
+	static const double boxTolerance;
 	
 	double *points;
 	int nPoints; // number of points at lowest level

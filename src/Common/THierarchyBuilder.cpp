@@ -2,9 +2,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int THierarchyBuilder::CM_Tree=0;
-int THierarchyBuilder::CM_Grid=1;
-double THierarchyBuilder::boxTolerance=1.E-10;
+const int THierarchyBuilder::CM_Tree=0;
+const int THierarchyBuilder::CM_Grid=1;
+const double THierarchyBuilder::boxTolerance=1.E-10;
 
 
 THierarchyBuilder::THierarchyBuilder(double *_points, int _nPoints, int _dim,

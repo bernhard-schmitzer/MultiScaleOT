@@ -22,10 +22,10 @@ public:
 
 class THierarchicalPartition {
 public:
-	static const int MODE_MIN=0;
-	static const int MODE_MAX=1;
-	static const int INTERPOLATION_MODE_CONSTANT=0;
-	static const int INTERPOLATION_MODE_GRIDLINEAR=1;
+	static const int MODE_MIN;
+	static const int MODE_MAX;
+	static const int INTERPOLATION_MODE_CONSTANT;
+	static const int INTERPOLATION_MODE_GRIDLINEAR;
 	
 	TPartitionLayer **layers;
 	int nLayers; // number of layers

@@ -1,5 +1,11 @@
 #include"THierarchicalPartition.h"
 
+const int THierarchicalPartition::MODE_MIN=0;
+const int THierarchicalPartition::MODE_MAX=1;
+const int THierarchicalPartition::INTERPOLATION_MODE_CONSTANT=0;
+const int THierarchicalPartition::INTERPOLATION_MODE_GRIDLINEAR=1;
+
+
 TPartitionLayer::TPartitionLayer() {
 	nCells=0;
 	parent=NULL;
