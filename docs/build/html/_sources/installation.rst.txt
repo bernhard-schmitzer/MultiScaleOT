@@ -64,10 +64,10 @@ Compilation from source
 
 * By default this builds the SparseSinkhorn algorithm module and the pybind11 front end. Configuration of the ShortCut algorithm module with CPLEX or the lemon library is currently not documented. If you want to learn more about this, feel free to contact me.
 
-    * The python module is placed in *MultiScaleOT/python*. This can be imported as usual.
-    * Some additional static libraries are placed in *MultiScaleOT/bin*,
-    * some headers in *MultiScaleOT/include*,
-    * and some pure C++ examples in *MultiScaleOT/examples*.
+  * The python module is placed in *MultiScaleOT/python*. This can be imported as usual.
+  * Some additional static libraries are placed in *MultiScaleOT/bin*,
+  * some headers in *MultiScaleOT/include*,
+  * and some pure C++ examples in *MultiScaleOT/examples*.
 
 .. _installation-google-colab:
 

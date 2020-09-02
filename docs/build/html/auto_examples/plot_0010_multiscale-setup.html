@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1d Sparse Sinkhorn &mdash; MultiScaleOT 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1d Barycenter with Sinkhorn" href="plot_0020_1d-barycenter.html" />
+    <link rel="prev" title="Examples" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MultiScaleOT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1d Sparse Sinkhorn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_0020_1d-barycenter.html">1d Barycenter with Sinkhorn</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Module reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiScaleOT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Examples</a> &raquo;</li>
+        
+      <li>1d Sparse Sinkhorn</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/auto_examples/plot_0010_multiscale-setup.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-0010-multiscale-setup-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="d-sparse-sinkhorn">
+<span id="sphx-glr-auto-examples-plot-0010-multiscale-setup-py"></span><h1>1d Sparse Sinkhorn<a class="headerlink" href="#d-sparse-sinkhorn" title="Permalink to this headline">¶</a></h1>
+<p>This example demonstrates on a simple 1-dimensional example the basic usage of the TMultiScaleSetupGrid class for representing a point cloud with a measure on multiple resolution levels and how to use the SparseSinkhorn solver.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="kn">import</span> <span class="nn">MultiScaleOT</span>
+
+<span class="c1"># Generate a 1D Gaussian measure over a 1D list of points</span>
+<span class="n">pos</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">pos</span><span class="o">-</span><span class="mf">16.</span><span class="p">)</span><span class="o">/</span><span class="mf">4.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+
+
+<span class="c1"># Simple visualization</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0010_multiscale-setup_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0010_multiscale-setup_001.png" />
+<p>Now we generate the TMultiScaleSetup object</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># determines how many layers the multiscale representation will have</span>
+<span class="n">hierarchyDepth</span><span class="o">=</span><span class="mi">5</span>
+
+<span class="c1"># generate object</span>
+<span class="n">MultiScaleSetup</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">TMultiScaleSetupGrid</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span><span class="n">hierarchyDepth</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>How many layers are there?</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nLayers</span><span class="o">=</span><span class="n">MultiScaleSetup</span><span class="o">.</span><span class="n">getNLayers</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">nLayers</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>6
+</pre></div>
+</div>
+<p>How many points are on each layer?</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="n">MultiScaleSetup</span><span class="o">.</span><span class="n">getNPoints</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLayers</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[1, 2, 4, 8, 16, 32]
+</pre></div>
+</div>
+<p>Plot all versions of the measure at all layers.
+At the coarsest layer it is only a single point with mass 1.
+At each subsequent finer layer, the mass is split over more points.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLayers</span><span class="p">):</span>
+    <span class="n">posL</span><span class="o">=</span><span class="n">MultiScaleSetup</span><span class="o">.</span><span class="n">getPoints</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+    <span class="n">muL</span><span class="o">=</span><span class="n">MultiScaleSetup</span><span class="o">.</span><span class="n">getMeasure</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">posL</span><span class="p">,</span><span class="n">muL</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">l</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0010_multiscale-setup_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0010_multiscale-setup_002.png" />
+<p>Create a second measure, a sum of two gaussians. Create a corresponding multiscale object. Plot both measures for comparison.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">pos</span><span class="o">-</span><span class="mf">8.</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">pos</span><span class="o">-</span><span class="mf">24.</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">nu</span><span class="o">=</span><span class="n">nu</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span>
+
+<span class="n">MultiScaleSetup2</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">TMultiScaleSetupGrid</span><span class="p">(</span><span class="n">nu</span><span class="p">,</span><span class="n">hierarchyDepth</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0010_multiscale-setup_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0010_multiscale-setup_003.png" />
+<p>Create a cost function object for the two measures. Evaluate all pairwise costs and display as image.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">costFunction</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">THierarchicalCostFunctionProvider_SquaredEuclidean</span><span class="p">(</span>
+        <span class="n">MultiScaleSetup</span><span class="p">,</span><span class="n">MultiScaleSetup2</span><span class="p">)</span>
+
+<span class="c1"># number of points in the two measures:</span>
+<span class="n">xres</span><span class="o">=</span><span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">yres</span><span class="o">=</span><span class="n">nu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">costFunction</span><span class="o">.</span><span class="n">getCost</span><span class="p">(</span><span class="n">hierarchyDepth</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">yres</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xres</span><span class="p">)])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0010_multiscale-setup_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0010_multiscale-setup_004.png" />
+<p>Create an epsilon scaling object. Choosing the proper values for epsilon scaling and the scheduling over the multiple layers is not trivial. The following parameters should work well on most Wasserstein-2-type problems.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">epsScalingHandler</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">TEpsScalingHandler</span><span class="p">()</span>
+<span class="n">epsScalingHandler</span><span class="o">.</span><span class="n">setupGeometricMultiLayerB</span><span class="p">(</span><span class="n">nLayers</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">4.</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Check which values for epsilon scaling have been generated. This returns a list of eps values to be used on each layer.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">epsScalingHandler</span><span class="o">.</span><span class="n">get</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[array([4096., 2048., 1024.]), array([1024.,  512.,  256.]), array([256., 128.,  64.]), array([64., 32., 16.]), array([16.,  8.,  4.]), array([4.  , 2.  , 1.  , 0.5 , 0.25])]
+</pre></div>
+</div>
+<p>Now generate Sinkhorn solver object, initialize, solve, extract optimal coupling and convert it to scipy.sparse.csr_matrix.
+Visualize optimal coupling as image.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># error goal</span>
+<span class="n">errorGoal</span><span class="o">=</span><span class="mf">1E-3</span>
+<span class="c1"># Sinkhorn solver object</span>
+<span class="n">SinkhornSolver</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">TSinkhornSolverStandard</span><span class="p">(</span><span class="n">epsScalingHandler</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span><span class="n">hierarchyDepth</span><span class="p">,</span><span class="n">errorGoal</span><span class="p">,</span>
+        <span class="n">MultiScaleSetup</span><span class="p">,</span><span class="n">MultiScaleSetup2</span><span class="p">,</span><span class="n">costFunction</span>
+        <span class="p">)</span>
+
+<span class="c1"># initialize and solve</span>
+<span class="n">SinkhornSolver</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="n">SinkhornSolver</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+
+<span class="c1"># extract optimal coupling</span>
+<span class="n">kernelData</span><span class="o">=</span><span class="n">SinkhornSolver</span><span class="o">.</span><span class="n">getKernelCSRDataTuple</span><span class="p">()</span>
+<span class="n">kernel</span><span class="o">=</span><span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">kernelData</span><span class="p">,</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">xres</span><span class="p">,</span><span class="n">yres</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0010_multiscale-setup_005.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0010_multiscale-setup_005.png" />
+<p>Print the optimal transport cost part of the primal objective (cost function integrated against optimal coupling) and compare it with manually computed value.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">SinkhornSolver</span><span class="o">.</span><span class="n">getScoreTransportCost</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">*</span><span class="n">c</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>23.965531931307662
+23.96553193130768
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.347 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-0010-multiscale-setup-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/287a14b644fb1bac4e2c058dcff66297/plot_0010_multiscale-setup.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_0010_multiscale-setup.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/de638ad12435ebd029d5fdecad584e73/plot_0010_multiscale-setup.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_0010_multiscale-setup.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="plot_0020_1d-barycenter.html" class="btn btn-neutral float-right" title="1d Barycenter with Sinkhorn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Bernhard Schmitzer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

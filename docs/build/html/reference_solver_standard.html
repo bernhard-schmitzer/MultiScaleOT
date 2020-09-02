@@ -167,8 +167,7 @@
 <dl class="class">
 <dt id="MultiScaleOT.TSinkhornSolverBase">
 <em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TSinkhornSolverBase</code><a class="headerlink" href="#MultiScaleOT.TSinkhornSolverBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>”
-This is an abstract base class for the specialized SinkhornSolver classes.
+<dd><p>This is an abstract base class for the specialized SinkhornSolver classes.
 It does not expose a constructor to the user but its methods are inherited by all specialized Sinkhorn solver classes.</p>
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverBase.absorb">
@@ -288,7 +287,7 @@ Experimental. Only experts should modify this.</p>
 <dd><p>Solver class for standard entropic optimal transport problems with fixed marginal constraints.</p>
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em>, <em class="sig-param">epsScalingHandler: MultiScaleOT.TEpsScalingHandler</em>, <em class="sig-param">layerCoarsest: int</em>, <em class="sig-param">layerFinest: int</em>, <em class="sig-param">errorGoal: float</em>, <em class="sig-param">MultiScaleSetupX: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">MultiScaleSetupY: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">costProvider: MultiScaleOT.THierarchicalCostFunctionProvider</em>, <em class="sig-param">cfg: MultiScaleOT.TSinkhornSolverParameters = &lt;MultiScaleOT.TSinkhornSolverParameters object at 0x7fdfa95184b0&gt;</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em>, <em class="sig-param">epsScalingHandler: MultiScaleOT.TEpsScalingHandler</em>, <em class="sig-param">layerCoarsest: int</em>, <em class="sig-param">layerFinest: int</em>, <em class="sig-param">errorGoal: float</em>, <em class="sig-param">MultiScaleSetupX: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">MultiScaleSetupY: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">costProvider: MultiScaleOT.THierarchicalCostFunctionProvider</em>, <em class="sig-param">cfg: MultiScaleOT.TSinkhornSolverParameters = &lt;MultiScaleOT.TSinkhornSolverParameters object at 0x7f8204220870&gt;</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -326,42 +325,62 @@ Experimental. Only experts should modify this.</p>
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.getKernel">
 <code class="sig-name descname">getKernel</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.TKernelMatrix<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getKernel" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a TKernelMatrix object holding the current stabilized kernel.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.getKernelCSRData">
 <code class="sig-name descname">getKernelCSRData</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.TSparseCSRContainer<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getKernelCSRData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a TSparseCSRContainer object containing the non-zero stabilized kernel entries in sparse CSR format.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.getKernelCSRDataTuple">
 <code class="sig-name descname">getKernelCSRDataTuple</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getKernelCSRDataTuple" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a tuple of numpy arrays (data,indices,indptr) of types (float64,int32,int32) containing the non-zero stabilized kernel entries in sparse CSR format (see scipy.sparse.csr_matrix).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.getKernelEntryCount">
 <code class="sig-name descname">getKernelEntryCount</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getKernelEntryCount" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns number of non-zero entries in current stabilized kernel.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.getKernelPosData">
 <code class="sig-name descname">getKernelPosData</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.TSparsePosContainer<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getKernelPosData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a TSparsePosContainer object containing the non-zero stabilized kernel entries in sparse POS format.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.getKernelPosDataTuple">
 <code class="sig-name descname">getKernelPosDataTuple</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getKernelPosDataTuple" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a tuple of numpy arrays (mass,posStart,posEnd) of types (float64,int32,int32) containing the non-zero stabilized kernel entries in sparse POS format (mass values, row indices, column indices, see also scipy.sparse.coo_matrix).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverStandard.getMarginalX">
+<code class="sig-name descname">getMarginalX</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.float64]<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getMarginalX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return 1st marginal of current coupling.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSinkhornSolverStandard.getMarginalY">
+<code class="sig-name descname">getMarginalY</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.float64]<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getMarginalY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return 1st marginal of current coupling.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.getScorePrimalUnreg">
 <code class="sig-name descname">getScorePrimalUnreg</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getScorePrimalUnreg" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return current primal cost without the entropy term (only transport term and marginal discrepancies in unbalanced cases).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TSinkhornSolverStandard.getScoreTransportCost">
 <code class="sig-name descname">getScoreTransportCost</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSinkhornSolverStandard</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#MultiScaleOT.TSinkhornSolverStandard.getScoreTransportCost" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return transport cost of current coupling (i.e. integral of coupling against cost function on product space.</p>
+</dd></dl>
 
 </dd></dl>
 

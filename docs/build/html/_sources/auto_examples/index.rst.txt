@@ -18,9 +18,9 @@ A convenient way to try them is via :ref:`Google colab <installation-google-cola
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_multiscale-setup_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_0010_multiscale-setup_thumb.png
 
-     :ref:`sphx_glr_auto_examples_plot_multiscale-setup.py`
+     :ref:`sphx_glr_auto_examples_plot_0010_multiscale-setup.py`
 
 .. raw:: html
 
@@ -30,7 +30,27 @@ A convenient way to try them is via :ref:`Google colab <installation-google-cola
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_multiscale-setup
+   /auto_examples/plot_0010_multiscale-setup
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates on a simple 1-dimensional example the basic usage of the TSinkhornSol...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_0020_1d-barycenter_thumb.png
+
+     :ref:`sphx_glr_auto_examples_plot_0020_1d-barycenter.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_0020_1d-barycenter
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

@@ -8,8 +8,8 @@ MultiScaleOT is a library for numerical optimal transport implemented in C++. A 
 Its primary functionality are coarse-to-fine algorithms for discrete optimal transport problems in the linear programming formulation due to Kantorovich.
 The two main algorithms are:
 
-    * **ShortCut**: the sparse multi-scale linear program solver described in [Schmitzer2016]_
-    * **SparseSinkhorn**: the stabilized sparse Sinkhorn algorithm based on entropy regularization, as described in [Schmitzer2019]_
+* **ShortCut**: the sparse multi-scale linear program solver described in [Schmitzer2016]_
+* **SparseSinkhorn**: the stabilized sparse Sinkhorn algorithm based on entropy regularization, as described in [Schmitzer2019]_
 
 In the current version the focus of development lies on the SparseSinkhorn algorithm. For ShortCut there is currently no Python front-end support.
 

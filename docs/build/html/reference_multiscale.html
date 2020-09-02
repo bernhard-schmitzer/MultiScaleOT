@@ -170,7 +170,7 @@
 <dd><p>Multiscale representation of a measure supported on a point cloud.</p>
 <dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, pos: numpy.ndarray[float64], mu: numpy.ndarray[float64], depth: int, childMode: int = 1, setup: bool = True, setupDuals: bool = True, setupRadii: bool = True</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, pos: numpy.ndarray[numpy.float64], mu: numpy.ndarray[numpy.float64], depth: int, childMode: int = 1, setup: bool = True, setupDuals: bool = True, setupRadii: bool = True</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -192,8 +192,56 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetup.coarsenSignal">
+<code class="sig-name descname">coarsenSignal</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, signal: numpy.ndarray[numpy.float64], lFinest: int, lCoarsest: int, mode: int</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.coarsenSignal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coarsens a double-valued signal from one layer to subsequent coarser layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> – 1d double array with signal at finest layer</p></li>
+<li><p><strong>lFinest</strong> – id of finest layer</p></li>
+<li><p><strong>lCoarsest</strong> – id of coarsest layer</p></li>
+<li><p><strong>mode</strong> – <p>determines how signal is refined.</p>
+<ul>
+<li><p>0: coarse value is min over children</p></li>
+<li><p>1: coarse value is max over children</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of double array containing coarsened signal at requested layers.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetup.coarsenSignalInt">
+<code class="sig-name descname">coarsenSignalInt</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, signal: numpy.ndarray[numpy.int32], lFinest: int, lCoarsest: int, mode: int</em><span class="sig-paren">)</span> &#x2192; list<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.coarsenSignalInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coarsens a int32-valued signal from one layer to subsequent coarser layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> – 1d int32 array with signal at finest layer</p></li>
+<li><p><strong>lFinest</strong> – id of finest layer</p></li>
+<li><p><strong>lCoarsest</strong> – id of coarsest layer</p></li>
+<li><p><strong>mode</strong> – <p>determines how signal is refined.</p>
+<ul>
+<li><p>0: coarse value is min over children</p></li>
+<li><p>1: coarse value is max over children</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of double array containing coarsened signal at requested layers.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.getChildren">
-<code class="sig-name descname">getChildren</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em>, <em class="sig-param">id: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[int32]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getChildren" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getChildren</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em>, <em class="sig-param">id: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.int32]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getChildren" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get list of children of node id at layer nLayer.</p>
 </dd></dl>
 
@@ -205,13 +253,13 @@
 
 <dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.getDual">
-<code class="sig-name descname">getDual</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getDual" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getDual</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getDual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return dual variable values at layer nLayer.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.getMeasure">
-<code class="sig-name descname">getMeasure</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getMeasure" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getMeasure</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getMeasure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get measure at layer nLayer. If nLayer==nLayers-1==depth it returns the original measure.</p>
 </dd></dl>
 
@@ -229,7 +277,7 @@
 
 <dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.getParents">
-<code class="sig-name descname">getParents</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[int32]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getParents" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getParents</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.int32]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getParents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parents of nodes at layer nLayer.</p>
 <p>Returns zeros at coarsest layer, nLayer=0.
 At finer layers returns array of int32 of size of current layer. Each entry gives id of parent node in parent layer. This id is location of the parent node in points or measure arrays.</p>
@@ -237,19 +285,19 @@ At finer layers returns array of int32 of size of current layer. Each entry give
 
 <dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.getPoints">
-<code class="sig-name descname">getPoints</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getPoints" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getPoints</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get points at layer nLayer. If nLayer==nLayers-1==depth it returns the original point cloud.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.getRadii">
-<code class="sig-name descname">getRadii</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getRadii" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getRadii</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">nLayer: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.getRadii" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get radii at layer nLayer. Only valid for nLayer&lt;=nLayers-2 since there are no radii on finest layer.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.refineSignal">
-<code class="sig-name descname">refineSignal</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, signal: numpy.ndarray[float64], lTop: int, mode: int = 0</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.refineSignal" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">refineSignal</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, signal: numpy.ndarray[numpy.float64], lTop: int, mode: int = 0</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[numpy.float64]<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.refineSignal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refines a hierarchical signal from one layer to the subsequent finer layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -284,7 +332,7 @@ At finer layers returns array of int32 of size of current layer. Each entry give
 
 <dl class="method">
 <dt id="MultiScaleOT.TMultiScaleSetup.setDual">
-<code class="sig-name descname">setDual</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, alpha: numpy.ndarray[float64], nLayer: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.setDual" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setDual</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, alpha: numpy.ndarray[numpy.float64], nLayer: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.setDual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set dual variable at layer nLayer to alpha and then propagates values to all coarser layers by maximization over child nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -318,6 +366,18 @@ At finer layers returns array of int32 of size of current layer. Each entry give
 <dt id="MultiScaleOT.TMultiScaleSetup.setupRadii">
 <code class="sig-name descname">setupRadii</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.setupRadii" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute radii of hierarchical partition cells. See also constructor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetup.updateMeasure">
+<code class="sig-name descname">updateMeasure</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, newMeasure: numpy.ndarray[numpy.float64]</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.updateMeasure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the point masses of the multi scale representation at the finest layer and internally updates all coarser nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TMultiScaleSetup.updatePositions">
+<code class="sig-name descname">updatePositions</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TMultiScaleSetup, newPositions: numpy.ndarray[numpy.float64]</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#MultiScaleOT.TMultiScaleSetup.updatePositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the spatial positions of the multi scale representation at the finest layer and internally updates all coarser nodes and radii values.</p>
 </dd></dl>
 
 </dd></dl>

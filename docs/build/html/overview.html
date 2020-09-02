@@ -161,12 +161,10 @@
 <p><strong>This is a very early version of the library and the documentation. No warranty is provided, use with caution.</strong></p>
 <p>Its primary functionality are coarse-to-fine algorithms for discrete optimal transport problems in the linear programming formulation due to Kantorovich.
 The two main algorithms are:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p><strong>ShortCut</strong>: the sparse multi-scale linear program solver described in <a class="reference internal" href="#schmitzer2016" id="id1"><span>[Schmitzer2016]</span></a></p></li>
 <li><p><strong>SparseSinkhorn</strong>: the stabilized sparse Sinkhorn algorithm based on entropy regularization, as described in <a class="reference internal" href="#schmitzer2019" id="id2"><span>[Schmitzer2019]</span></a></p></li>
 </ul>
-</div></blockquote>
 <p>In the current version the focus of development lies on the SparseSinkhorn algorithm. For ShortCut there is currently no Python front-end support.</p>
 <p>In this early stage there is no extensive documentation available. It is recommended to try to complete the installation and then look at some of the example files.
 Note that this is highly experimental software. It does very few safety checks on the users input data and will likely cause a segmentation fault if invalid data is provided. See also Disclaimer &amp; License.</p>

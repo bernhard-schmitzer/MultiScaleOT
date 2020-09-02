@@ -19,7 +19,7 @@ This project and its documentation are far from complete and still under constru
 See also
 ==================
 
-  * :ref:`search`
+* :ref:`search`
 
 ..
   * :ref:`genindex`
