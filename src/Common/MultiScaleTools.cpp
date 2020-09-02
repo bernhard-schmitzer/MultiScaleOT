@@ -373,6 +373,27 @@ int TMultiScaleSetup::SetupRadii() {
 }
 
 
+int TMultiScaleSetup::UpdatePositions(double *newPos) {
+	pos=newPos;
+	HB->updatePositions(pos);
+	HB->getSignalPosExplicit(posH);
+	
+	if (radii!=NULL) {
+		HB->getSignalRadiiExplicit(posH,radii);
+	}
+	
+	return 0;
+}
+
+int TMultiScaleSetup::UpdateMeasure(double *newMu) {
+	mu=newMu;
+	if(muH!=NULL) {
+		HP->computeHierarchicalMasses(mu,muH);	
+	}
+	return 0;
+}
+
+
 //////////////////////////////////////////
 // Cartesian Grid
 //////////////////////////////////////////

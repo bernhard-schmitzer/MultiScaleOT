@@ -135,7 +135,7 @@ void THierarchicalPartition::signal_free_double(double **signal, int lTop, int l
 
 }
 
-void THierarchicalPartition::signal_propagate_double(double **signal, int lTop, int lBottom, int mode) {
+void THierarchicalPartition::signal_propagate_double(double **signal, const int lTop, const int lBottom, const int mode) {
 	double newValue,value;
 	// iterate through all involved layers (except the finest one), from bottom up
 	for(int i=lBottom-1;i>=lTop;i--) {
@@ -154,6 +154,28 @@ void THierarchicalPartition::signal_propagate_double(double **signal, int lTop, 
 		}
 	}
 }
+
+
+void THierarchicalPartition::signal_propagate_int(int **signal, const int lTop, const int lBottom, const int mode) {
+	int newValue,value;
+	// iterate through all involved layers (except the finest one), from bottom up
+	for(int i=lBottom-1;i>=lTop;i--) {
+		// go through all cells on current layer
+		for(int j=0;j<layers[i]->nCells;j++) {
+			// initialize signal with value of first child
+			value=signal[i-lTop+1][layers[i]->children[j][0] ];
+			// iterate over rest of children
+			for(int k=1;k<layers[i]->nChildren[j];k++) {
+				newValue=signal[i-lTop+1][layers[i]->children[j][k] ];
+				if( ((mode==MODE_MAX) && (newValue>value)) || ((mode==MODE_MIN) && (newValue<value))) {
+					value=newValue;
+				}
+			}
+			signal[i-lTop][j]=value;
+		}
+	}
+}
+
 
 void THierarchicalPartition::signal_refine_double(double *signal, double *signalFine, int lTop, int mode) {
 	switch(mode) {

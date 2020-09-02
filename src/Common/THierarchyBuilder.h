@@ -62,7 +62,11 @@ public:
 	
 	double** getSignalRadii();
 	double** getSignalRadiiAxis(int *axis, int naxis);
-};
+	
+	void updatePositions(double *newPos);
+	void getSignalPosExplicit(double **signal);
+	void getSignalRadiiExplicit(double **posH, double **radii);
 
+};
 
 #endif

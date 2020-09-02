@@ -407,3 +407,75 @@ double** THierarchyBuilder::getSignalRadiiAxis(int *axis, int naxis) {
 	return result;
 }
 
+void THierarchyBuilder::updatePositions(double *newPoints) {
+	points=newPoints;
+}
+
+void THierarchyBuilder::getSignalPosExplicit(double **signal) {
+	// compute hierarchical positions explicitly as mean positions of the node's children
+	int i;
+
+	// initialize with: atomic layer
+	i=layers.size()-1;
+	for(int j=0;j<nPoints*dim;j++) {
+		signal[i][j]=points[j];
+	}
+
+	// non-atomic layers
+	for(i=(int) layers.size()-2;i>=0;i--) {
+		for(int k=0;k<dim;k++) {
+			for(int j=0;j<(int) layers[i].nodes.size();j++) {
+				// for each node: initialize value with zero
+				signal[i][j*dim+k]=0;
+				int nChildren=(int) layers[i].nodes[j].children.size();
+				// now go over children
+				for(int jChild=0;jChild<nChildren;jChild++) {
+					int idxChild=layers[i].nodes[j].children[jChild];
+					signal[i][j*dim+k]+=(double) (signal[i+1][idxChild*dim+k]/nChildren);
+				}
+			}
+		}
+	}
+}
+
+void THierarchyBuilder::getSignalRadiiExplicit(double **posH, double **radii) {
+	// compute hierarchical radii explicitly as max distance to the node's descendants
+	// use following approximation: compute max of [dist to node's children + that child's radius]
+
+	// do nothing if at most one layer
+	if (layers.size()<=1) {
+		return;
+	}
+
+	int i;
+
+	// non-atomic layers
+	for(i=(int) layers.size()-2;i>=0;i--) {
+		//printf("%d\n",i);
+		// iterate over nodes on that layer
+		for(int j=0;j<(int) layers[i].nodes.size();j++) {
+			// reset radius to 0
+			radii[i][j]=0.;
+			//printf("\t%d\n",j);
+			// iterate over node's children
+			int nChildren=(int) layers[i].nodes[j].children.size();
+			for(int jChild=0;jChild<nChildren;jChild++) {
+				// for child compute explicit distance between nodes
+				int idxChild=layers[i].nodes[j].children[jChild];
+				double newRadius=0.;
+				for(int k=0;k<dim;k++) {
+					newRadius+=std::pow(posH[i+1][idxChild*dim+k]-posH[i][j*dim+k],2);
+				}
+				newRadius=std::sqrt(newRadius);
+				// add child's radius
+				if(i<(int) layers.size()-2) {
+					newRadius+=radii[i+1][idxChild];
+				}
+				if (newRadius>radii[i][j]) {
+					radii[i][j]=newRadius;
+				}
+			}
+		}
+	}
+}
+

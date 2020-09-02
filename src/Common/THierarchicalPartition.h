@@ -39,7 +39,8 @@ public:
 	void computeHierarchicalMasses(double *mu, double **muLayers);
 	double** signal_allocate_double(int lTop, int lBottom);
 	void signal_free_double(double **signal, int lTop, int lBottom);
-	void signal_propagate_double(double **signal ,int lTop, int lBottom, int mode);
+	void signal_propagate_double(double **signal, const int lTop, const int lBottom, const int mode);
+	void signal_propagate_int(int **signal, const int lTop, const int lBottom, const int mode);
 	
 	void signal_refine_double(double *signal, double *signalFine, int lTop, int mode);
 	void signal_refine_double(double *signal, double *signalFine, int lTop) {

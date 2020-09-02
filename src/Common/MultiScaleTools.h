@@ -122,6 +122,8 @@ public:
 	virtual int SetupDuals();
 	virtual int SetupRadii();
 	
+	virtual int UpdatePositions(double *newPos);
+	virtual int UpdateMeasure(double *newMu);
 };
 
 

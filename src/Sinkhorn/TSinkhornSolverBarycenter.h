@@ -70,6 +70,10 @@ public:
 	virtual int generateKernel();
 	virtual int refineKernel();
 
+	// convenience functions
+	virtual TMarginalVector getMarginalX(const int nMarginal) const;
+	virtual TMarginalVector getMarginalY(const int nMarginal) const;
+
 	// model specific
 	virtual int iterate(const int n);
 	virtual int getError(double * const result);

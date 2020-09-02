@@ -389,29 +389,17 @@ double TSinkhornSolverStandard::scorePrimalUnreg() {
 }
 
 
-
-
-std::vector<double> TSinkhornSolverStandard::getMarginalX() {
-	std::vector<double> result(xres);
-	writeMarginalX(result.data());
-	return result;
+TMarginalVector TSinkhornSolverStandard::getMarginalX() const {
+	// compute 1st marginal of transport plan
+	return u.cwiseProduct(kernel*v);
 }
 
-std::vector<double> TSinkhornSolverStandard::getMarginalY() {
-	std::vector<double> result(yres);
-	writeMarginalY(result.data());
-	return result;
+
+TMarginalVector TSinkhornSolverStandard::getMarginalY() const {
+	// compute 2nd marginal of transport plan
+	return v.cwiseProduct(kernelT*u);
 }
 
-void TSinkhornSolverStandard::writeMarginalX(double *buffer) {
-	Eigen::Map<TMarginalVector> bufferVec(buffer,xres);
-	bufferVec=u.cwiseProduct(kernel*v);
-}
-
-void TSinkhornSolverStandard::writeMarginalY(double *buffer) {
-	Eigen::Map<TMarginalVector> bufferVec(buffer,yres);
-	bufferVec=v.cwiseProduct(kernelT*u);
-}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

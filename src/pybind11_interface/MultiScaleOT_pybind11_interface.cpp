@@ -351,7 +351,7 @@ PYBIND11_MODULE(MultiScaleOT, m) {
         },"Returns a TSparsePosContainer object containing the non-zero kernel entries in sparse POS format.")
         .def("getPosDataTuple",[](const TKernelMatrix &kernel) {
             return getSparsePosDataTuple(SinkhornKernelGetPosData(kernel));
-        },"Returns a tuple of numpy arrays (posStart,posEnd,mass) of types (int32,int32,float64) containing the non-zero kernel entries in sparse POS format (row indices, column indices, mass values).");
+        },"Returns a tuple of numpy arrays (mass,posStart,posEnd) of types (float64,int32,int32) containing the non-zero kernel entries in sparse POS format (row indices, column indices, mass values).");
     #endif // Sinkhorn
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
     py::class_<TSparseCSRContainer>(m,"TSparseCSRContainer")
@@ -509,6 +509,68 @@ PYBIND11_MODULE(MultiScaleOT, m) {
             Args:
                 alpha: 1d double array with new values for dual variable. Size needs to equal number of cells in that layer.
                 nLayer: id of layer on which dual variable is to be set.)")
+        .def("coarsenSignal", [](TMultiScaleSetup *a, py::array_t<double> &signal, const int lFinest, const int lCoarsest, const int mode) {
+            vector<double*> signalH(lFinest-lCoarsest+1);
+            py::list result;
+            for(int i=lCoarsest;i<lFinest;i++) {
+                py::array_t<double> *layerArray=new py::array_t<double>(a->HP->layers[i]->nCells);
+                result.append(layerArray);
+                py::buffer_info layerArrayBuffer=layerArray->request();
+                signalH[i-lCoarsest]=(double*) layerArrayBuffer.ptr;
+            }
+            result.append(signal);
+            py::buffer_info signalBuffer=signal.request();
+            signalH[lFinest-lCoarsest]=(double*) signalBuffer.ptr;
+            a->HP->signal_propagate_double(signalH.data(), lCoarsest, lFinest, mode);
+
+            return result;
+
+            },py::arg("signal"),py::arg("lFinest"),py::arg("lCoarsest"),py::arg("mode"),
+            R"(
+            Coarsens a double-valued signal from one layer to subsequent coarser layers.
+            
+            Args:
+                signal: 1d double array with signal at finest layer
+                lFinest: id of finest layer
+                lCoarsest: id of coarsest layer
+                mode: determines how signal is refined.
+
+                    * 0: coarse value is min over children
+                    * 1: coarse value is max over children
+
+            Returns:
+                list of double array containing coarsened signal at requested layers.)")
+        .def("coarsenSignalInt", [](TMultiScaleSetup *a, py::array_t<int> &signal, const int lFinest, const int lCoarsest, const int mode) {
+            vector<int*> signalH(lFinest-lCoarsest+1);
+            py::list result;
+            for(int i=lCoarsest;i<lFinest;i++) {
+                py::array_t<int> *layerArray=new py::array_t<int>(a->HP->layers[i]->nCells);
+                result.append(layerArray);
+                py::buffer_info layerArrayBuffer=layerArray->request();
+                signalH[i-lCoarsest]=(int*) layerArrayBuffer.ptr;
+            }
+            result.append(signal);
+            py::buffer_info signalBuffer=signal.request();
+            signalH[lFinest-lCoarsest]=(int*) signalBuffer.ptr;
+            a->HP->signal_propagate_int(signalH.data(), lCoarsest, lFinest, mode);
+
+            return result;
+
+            },py::arg("signal"),py::arg("lFinest"),py::arg("lCoarsest"),py::arg("mode"),
+            R"(
+            Coarsens a int32-valued signal from one layer to subsequent coarser layers.
+            
+            Args:
+                signal: 1d int32 array with signal at finest layer
+                lFinest: id of finest layer
+                lCoarsest: id of coarsest layer
+                mode: determines how signal is refined.
+
+                    * 0: coarse value is min over children
+                    * 1: coarse value is max over children
+
+            Returns:
+                list of double array containing coarsened signal at requested layers.)")
         .def("refineSignal", [](TMultiScaleSetup *a, py::array_t<double> &signal, const int lTop, const int mode) {
             if(lTop>a->HP->nLayers-1) throw std::invalid_argument("lTop too large.");
 
@@ -540,7 +602,35 @@ PYBIND11_MODULE(MultiScaleOT, m) {
                     * 1: fine value is interpolated piecewise linearly (only works on Cartesian grids constructed with childMode=grid, experimental))
 
             Returns:
-                1d double array containing refined signal at fine layer (one layer below coarse layer))");
+                1d double array containing refined signal at fine layer (one layer below coarse layer))")
+        .def("updatePositions", [](TMultiScaleSetup *a, py::array_t<double> &newPositions) {
+            py::buffer_info posBuffer=newPositions.request();
+            
+            const int xres=a->HP->layers[a->HP->nLayers-1]->nCells;
+            
+            
+            if(xres!=posBuffer.shape[0]) throw std::invalid_argument("number of new points does not match finest layer size.");
+            if(a->HP->dim!=posBuffer.shape[1]) throw std::invalid_argument("dimension of new points does not match previous dimension");
+
+            return a->UpdatePositions((double*) posBuffer.ptr);
+            },
+            py::arg("newPositions"),
+            R"(
+            Overwrites the spatial positions of the multi scale representation at the finest layer and internally updates all coarser nodes and radii values.)")
+        .def("updateMeasure", [](TMultiScaleSetup *a, py::array_t<double> &newMeasure) {
+            py::buffer_info measureBuffer=newMeasure.request();
+            
+            const int xres=a->HP->layers[a->HP->nLayers-1]->nCells;
+            
+            
+            if(xres!=measureBuffer.shape[0]) throw std::invalid_argument("size of new measure does not match finest layer size.");
+
+            return a->UpdateMeasure((double*) measureBuffer.ptr);
+            },
+            py::arg("newMeasure"),
+            R"(
+            Overwrites the point masses of the multi scale representation at the finest layer and internally updates all coarser nodes.)");
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
     py::class_<TMultiScaleSetupGrid,TMultiScaleSetup>(m, "TMultiScaleSetupGrid")
         .def(py::init([](py::array_t<double> &muGrid, int depth,
@@ -744,7 +834,7 @@ PYBIND11_MODULE(MultiScaleOT, m) {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
     #ifdef USE_SINKHORN
     py::class_<TSinkhornSolverBase>(m,"TSinkhornSolverBase",
-            R"("
+            R"(
             This is an abstract base class for the specialized SinkhornSolver classes.
             It does not expose a constructor to the user but its methods are inherited by all specialized Sinkhorn solver classes.)"
             )
@@ -830,28 +920,36 @@ PYBIND11_MODULE(MultiScaleOT, m) {
             )
         .def("getKernel",[](const TSinkhornSolverStandard * const SinkhornSolver) {
             return SinkhornSolver->kernel;
-        })
+        },"Return a TKernelMatrix object holding the current stabilized kernel.")
         .def("getKernelCSRData",[](const TSinkhornSolverStandard * const SinkhornSolver) {
             return SinkhornKernelGetCSRData(SinkhornSolver->kernel);
-        })
+        },"Returns a TSparseCSRContainer object containing the non-zero stabilized kernel entries in sparse CSR format.")
         .def("getKernelPosData",[](const TSinkhornSolverStandard * const SinkhornSolver) {
             return SinkhornKernelGetPosData(SinkhornSolver->kernel);
-        })
+        },"Returns a TSparsePosContainer object containing the non-zero stabilized kernel entries in sparse POS format.")
         .def("getKernelCSRDataTuple",[](const TSinkhornSolverStandard * const SinkhornSolver) {
             return getSparseCSRDataTuple(SinkhornKernelGetCSRData(SinkhornSolver->kernel));
-        })
+        },"Returns a tuple of numpy arrays (data,indices,indptr) of types (float64,int32,int32) containing the non-zero stabilized kernel entries in sparse CSR format (see scipy.sparse.csr_matrix).")
         .def("getKernelPosDataTuple",[](const TSinkhornSolverStandard * const SinkhornSolver) {
             return getSparsePosDataTuple(SinkhornKernelGetPosData(SinkhornSolver->kernel));
-        })
+        },"Returns a tuple of numpy arrays (mass,posStart,posEnd) of types (float64,int32,int32) containing the non-zero stabilized kernel entries in sparse POS format (mass values, row indices, column indices, see also scipy.sparse.coo_matrix).")
         .def("getScorePrimalUnreg",[](TSinkhornSolverStandard * SinkhornSolver) {
             return SinkhornSolver->scorePrimalUnreg();
-        })
+        },"Return current primal cost without the entropy term (only transport term and marginal discrepancies in unbalanced cases).")
         .def("getScoreTransportCost",[](TSinkhornSolverStandard * SinkhornSolver) {
             return SinkhornSolver->scoreTransportCost();
-        })
+        },"Return transport cost of current coupling (i.e. integral of coupling against cost function on product space.")
         .def("getKernelEntryCount", [](TSinkhornSolverStandard * SinkhornSolver) {
             return SinkhornSolver->kernel.nonZeros();
-        })
+        },"Returns number of non-zero entries in current stabilized kernel.")
+        .def("getMarginalX", [](const TSinkhornSolverStandard * const a) {
+            TMarginalVector marg=a->getMarginalX();
+            return getArrayFromRaw<double>(marg.data(), marg.size());
+            },"Return 1st marginal of current coupling.")
+        .def("getMarginalY", [](const TSinkhornSolverStandard * const a) {
+            TMarginalVector marg=a->getMarginalY();
+            return getArrayFromRaw<double>(marg.data(), marg.size());
+            },"Return 1st marginal of current coupling.")
         .def("findKernelLine", [](TSinkhornSolverStandard * SinkhornSolver, int layerFinest, int a, int mode, double slack) {
             return findKernelLine(&(SinkhornSolver->kernelGenerator), layerFinest, a, mode, slack);
         }, py::arg("layerFinest"), py::arg("a"), py::arg("mode"), py::arg("slack"),
@@ -861,6 +959,7 @@ PYBIND11_MODULE(MultiScaleOT, m) {
                 a: index of kernel line to be determined
                 mode: 0: rows, 1: columns
                 slack: threshold below maximal value up to which entries are included
+            
             Returns:
                 A tuple of an int32 array and a double array, containing indices and effective cost values of dominating kernel entries.)"
         );
@@ -1025,6 +1124,14 @@ PYBIND11_MODULE(MultiScaleOT, m) {
         .def("getV", [](const TSinkhornSolverBarycenter * const a, const int nMarginal) {
             return getArrayFromRaw<double>(a->v[nMarginal].data(), a->v[nMarginal].size());
             })
+        .def("getMarginalX", [](const TSinkhornSolverBarycenter * const a, const int nMarginal) {
+            TMarginalVector marg=a->getMarginalX(nMarginal);
+            return getArrayFromRaw<double>(marg.data(), marg.size());
+            },"Return 1st marginal of current coupling between nMarginal-th reference measure and current barycenter candidate.")
+        .def("getMarginalY", [](const TSinkhornSolverBarycenter * const a, const int nMarginal) {
+            TMarginalVector marg=a->getMarginalY(nMarginal);
+            return getArrayFromRaw<double>(marg.data(), marg.size());
+            },"Return 2nd marginal of current coupling between nMarginal-th reference measure and current barycenter candidate.")
         .def("findKernelLine", [](TSinkhornSolverBarycenter * SinkhornSolver, const int nMarginal, int layerFinest, int a, int mode, double slack) {
             return findKernelLine(SinkhornSolver->kernelGenerator[nMarginal],layerFinest, a, mode, slack);
         }, py::arg("nMarginal"), py::arg("layerFinest"), py::arg("a"), py::arg("mode"), py::arg("slack"),

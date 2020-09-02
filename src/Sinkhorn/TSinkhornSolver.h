@@ -177,10 +177,9 @@ public:
 
 	virtual double scoreTransportCost();
 	
-	std::vector<double> getMarginalX();
-	std::vector<double> getMarginalY();
-	void writeMarginalX(double *buffer);
-	void writeMarginalY(double *buffer);
+	// convenience functions
+	virtual TMarginalVector getMarginalX() const;
+	virtual TMarginalVector getMarginalY() const;
 
 };
 

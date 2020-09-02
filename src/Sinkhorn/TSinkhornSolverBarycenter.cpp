@@ -158,6 +158,22 @@ int TSinkhornSolverBarycenter::refineKernel() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// convenience functions
+
+TMarginalVector TSinkhornSolverBarycenter::getMarginalX(const int nMarginal) const {
+	// compute 1st marginal of nMarginals-th transport plan
+	return u[nMarginal].cwiseProduct(kernel[nMarginal]*v[nMarginal]);
+
+}
+
+TMarginalVector TSinkhornSolverBarycenter::getMarginalY(const int nMarginal) const {
+	// compute 2nd marginal of nMarginals-th transport plan
+	return v[nMarginal].cwiseProduct(kernelT[nMarginal]*u[nMarginal]);
+
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // Standard optimal transport model
 
 int TSinkhornSolverBarycenter::iterate(const int n) {
@@ -209,7 +225,7 @@ int TSinkhornSolverBarycenter::iterate(const int n) {
 		
 			// compute naive new values of v[j]
 			TMarginalVector vNew=(logConvAvg-absorbedAvg/eps-logConvList[j]).array().exp().matrix();
-			// only apply new value outside of zero set. on zero set keep old values
+			// only apply new value outside of zero set. on zero reduce old values (since they should be removed from problem)
 			v[j]=(zeroSet>0).select(v[j]*1E-1,vNew);
 			if(!v[j].allFinite()) {
 				eprintf("\tNAN in v[%d]\n",j);
