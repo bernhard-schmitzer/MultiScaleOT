@@ -11,6 +11,12 @@
 
 
 TEST_SUBMODULE(pytypes, m) {
+    // test_int
+    m.def("get_int", []{return py::int_(0);});
+    // test_iterator
+    m.def("get_iterator", []{return py::iterator();});
+    // test_iterable
+    m.def("get_iterable", []{return py::iterable();});
     // test_list
     m.def("get_list", []() {
         py::list list;
@@ -25,6 +31,11 @@ TEST_SUBMODULE(pytypes, m) {
         int index = 0;
         for (auto item : list)
             py::print("list item {}: {}"_s.format(index++, item));
+    });
+    // test_none
+    m.def("get_none", []{return py::none();});
+    m.def("print_none", [](py::none none) {
+        py::print("none: {}"_s.format(none));
     });
 
     // test_set
@@ -186,6 +197,7 @@ TEST_SUBMODULE(pytypes, m) {
     // test_constructors
     m.def("default_constructors", []() {
         return py::dict(
+            "bytes"_a=py::bytes(),
             "str"_a=py::str(),
             "bool"_a=py::bool_(),
             "int"_a=py::int_(),
@@ -199,6 +211,7 @@ TEST_SUBMODULE(pytypes, m) {
 
     m.def("converting_constructors", [](py::dict d) {
         return py::dict(
+            "bytes"_a=py::bytes(d["bytes"]),
             "str"_a=py::str(d["str"]),
             "bool"_a=py::bool_(d["bool"]),
             "int"_a=py::int_(d["int"]),
@@ -214,6 +227,7 @@ TEST_SUBMODULE(pytypes, m) {
     m.def("cast_functions", [](py::dict d) {
         // When converting between Python types, obj.cast<T>() should be the same as T(obj)
         return py::dict(
+            "bytes"_a=d["bytes"].cast<py::bytes>(),
             "str"_a=d["str"].cast<py::str>(),
             "bool"_a=d["bool"].cast<py::bool_>(),
             "int"_a=d["int"].cast<py::int_>(),
@@ -225,6 +239,8 @@ TEST_SUBMODULE(pytypes, m) {
             "memoryview"_a=d["memoryview"].cast<py::memoryview>()
         );
     });
+
+    m.def("convert_to_pybind11_str", [](py::object o) { return py::str(o); });
 
     m.def("get_implicit_casting", []() {
         py::dict d;
@@ -307,4 +323,53 @@ TEST_SUBMODULE(pytypes, m) {
     m.def("test_list_slicing", [](py::list a) {
         return a[py::slice(0, -1, 2)];
     });
+
+    m.def("test_memoryview_object", [](py::buffer b) {
+        return py::memoryview(b);
+    });
+
+    m.def("test_memoryview_buffer_info", [](py::buffer b) {
+        return py::memoryview(b.request());
+    });
+
+    m.def("test_memoryview_from_buffer", [](bool is_unsigned) {
+        static const int16_t si16[] = { 3, 1, 4, 1, 5 };
+        static const uint16_t ui16[] = { 2, 7, 1, 8 };
+        if (is_unsigned)
+            return py::memoryview::from_buffer(
+                ui16, { 4 }, { sizeof(uint16_t) });
+        else
+            return py::memoryview::from_buffer(
+                si16, { 5 }, { sizeof(int16_t) });
+    });
+
+    m.def("test_memoryview_from_buffer_nativeformat", []() {
+        static const char* format = "@i";
+        static const int32_t arr[] = { 4, 7, 5 };
+        return py::memoryview::from_buffer(
+            arr, sizeof(int32_t), format, { 3 }, { sizeof(int32_t) });
+    });
+
+    m.def("test_memoryview_from_buffer_empty_shape", []() {
+        static const char* buf = "";
+        return py::memoryview::from_buffer(buf, 1, "B", { }, { });
+    });
+
+    m.def("test_memoryview_from_buffer_invalid_strides", []() {
+        static const char* buf = "\x02\x03\x04";
+        return py::memoryview::from_buffer(buf, 1, "B", { 3 }, { });
+    });
+
+    m.def("test_memoryview_from_buffer_nullptr", []() {
+        return py::memoryview::from_buffer(
+            static_cast<void*>(nullptr), 1, "B", { }, { });
+    });
+
+#if PY_MAJOR_VERSION >= 3
+    m.def("test_memoryview_from_memory", []() {
+        const char* buf = "\xff\xe1\xab\x37";
+        return py::memoryview::from_memory(
+            buf, static_cast<ssize_t>(strlen(buf)));
+    });
+#endif
 }

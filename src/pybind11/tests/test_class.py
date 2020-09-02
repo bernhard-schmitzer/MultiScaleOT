@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
 import pytest
+
+import env  # noqa: F401
 
 from pybind11_tests import class_ as m
 from pybind11_tests import UserType, ConstructorStats
@@ -99,6 +102,31 @@ def test_inheritance(msg):
     with pytest.raises(TypeError) as excinfo:
         m.Chimera("lion", "goat")
     assert "No constructor defined!" in str(excinfo.value)
+
+
+def test_inheritance_init(msg):
+
+    # Single base
+    class Python(m.Pet):
+        def __init__(self):
+            pass
+    with pytest.raises(TypeError) as exc_info:
+        Python()
+    expected = ["m.class_.Pet.__init__() must be called when overriding __init__",
+                "Pet.__init__() must be called when overriding __init__"]  # PyPy?
+    # TODO: fix PyPy error message wrt. tp_name/__qualname__?
+    assert msg(exc_info.value) in expected
+
+    # Multiple bases
+    class RabbitHamster(m.Rabbit, m.Hamster):
+        def __init__(self):
+            m.Rabbit.__init__(self, "RabbitHamster")
+
+    with pytest.raises(TypeError) as exc_info:
+        RabbitHamster()
+    expected = ["m.class_.Hamster.__init__() must be called when overriding __init__",
+                "Hamster.__init__() must be called when overriding __init__"]  # PyPy
+    assert msg(exc_info.value) in expected
 
 
 def test_automatic_upcasting():
@@ -235,7 +263,7 @@ def test_brace_initialization():
     assert b.vec == [123, 456]
 
 
-@pytest.unsupported_on_pypy
+@pytest.mark.xfail("env.PYPY")
 def test_class_refcount():
     """Instances must correctly increase/decrease the reference count of their types (#1029)"""
     from sys import getrefcount
@@ -279,3 +307,27 @@ def test_aligned():
     if hasattr(m, "Aligned"):
         p = m.Aligned().ptr()
         assert p % 1024 == 0
+
+
+# https://foss.heptapod.net/pypy/pypy/-/issues/2742
+@pytest.mark.xfail("env.PYPY")
+def test_final():
+    with pytest.raises(TypeError) as exc_info:
+        class PyFinalChild(m.IsFinal):
+            pass
+    assert str(exc_info.value).endswith("is not an acceptable base type")
+
+
+# https://foss.heptapod.net/pypy/pypy/-/issues/2742
+@pytest.mark.xfail("env.PYPY")
+def test_non_final_final():
+    with pytest.raises(TypeError) as exc_info:
+        class PyNonFinalFinalChild(m.IsNonFinalFinal):
+            pass
+    assert str(exc_info.value).endswith("is not an acceptable base type")
+
+
+# https://github.com/pybind/pybind11/issues/1878
+def test_exception_rvalue_abort():
+    with pytest.raises(RuntimeError):
+        m.PyPrintDestructor().throw_something()

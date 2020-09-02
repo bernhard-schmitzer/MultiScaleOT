@@ -1,17 +1,16 @@
+# -*- coding: utf-8 -*-
 import pytest
 from pybind11_tests import ConstructorStats
 
-pytestmark = pytest.requires_eigen_and_numpy
+np = pytest.importorskip("numpy")
+m = pytest.importorskip("pybind11_tests.eigen")
 
-with pytest.suppress(ImportError):
-    from pybind11_tests import eigen as m
-    import numpy as np
 
-    ref = np.array([[ 0.,  3,  0,  0,  0, 11],
-                    [22,  0,  0,  0, 17, 11],
-                    [ 7,  5,  0,  1,  0, 11],
-                    [ 0,  0,  0,  0,  0, 11],
-                    [ 0,  0, 14,  0,  8, 11]])
+ref = np.array([[ 0.,  3,  0,  0,  0, 11],
+                [22,  0,  0,  0, 17, 11],
+                [ 7,  5,  0,  1,  0, 11],
+                [ 0,  0,  0,  0,  0, 11],
+                [ 0,  0, 14,  0,  8, 11]])
 
 
 def assert_equal_ref(mat):
@@ -79,15 +78,17 @@ def test_mutator_descriptors():
     m.fixed_mutator_a(zc)
     with pytest.raises(TypeError) as excinfo:
         m.fixed_mutator_r(zc)
-    assert ('(arg0: numpy.ndarray[float32[5, 6], flags.writeable, flags.c_contiguous]) -> None'
+    assert ('(arg0: numpy.ndarray[numpy.float32[5, 6],'
+            ' flags.writeable, flags.c_contiguous]) -> None'
             in str(excinfo.value))
     with pytest.raises(TypeError) as excinfo:
         m.fixed_mutator_c(zr)
-    assert ('(arg0: numpy.ndarray[float32[5, 6], flags.writeable, flags.f_contiguous]) -> None'
+    assert ('(arg0: numpy.ndarray[numpy.float32[5, 6],'
+            ' flags.writeable, flags.f_contiguous]) -> None'
             in str(excinfo.value))
     with pytest.raises(TypeError) as excinfo:
         m.fixed_mutator_a(np.array([[1, 2], [3, 4]], dtype='float32'))
-    assert ('(arg0: numpy.ndarray[float32[5, 6], flags.writeable]) -> None'
+    assert ('(arg0: numpy.ndarray[numpy.float32[5, 6], flags.writeable]) -> None'
             in str(excinfo.value))
     zr.flags.writeable = False
     with pytest.raises(TypeError):
@@ -141,7 +142,7 @@ def test_nonunit_stride_from_python():
 
     counting_3d = np.arange(27.0, dtype=np.float32).reshape((3, 3, 3))
     slices = [counting_3d[0, :, :], counting_3d[:, 0, :], counting_3d[:, :, 0]]
-    for slice_idx, ref_mat in enumerate(slices):
+    for ref_mat in slices:
         np.testing.assert_array_equal(m.double_mat_cm(ref_mat), 2.0 * ref_mat)
         np.testing.assert_array_equal(m.double_mat_rm(ref_mat), 2.0 * ref_mat)
 
@@ -170,7 +171,7 @@ def test_negative_stride_from_python(msg):
     counting_3d = np.arange(27.0, dtype=np.float32).reshape((3, 3, 3))
     counting_3d = counting_3d[::-1, ::-1, ::-1]
     slices = [counting_3d[0, :, :], counting_3d[:, 0, :], counting_3d[:, :, 0]]
-    for slice_idx, ref_mat in enumerate(slices):
+    for ref_mat in slices:
         np.testing.assert_array_equal(m.double_mat_cm(ref_mat), 2.0 * ref_mat)
         np.testing.assert_array_equal(m.double_mat_rm(ref_mat), 2.0 * ref_mat)
 
@@ -179,7 +180,7 @@ def test_negative_stride_from_python(msg):
         m.double_threer(second_row)
     assert msg(excinfo.value) == """
         double_threer(): incompatible function arguments. The following argument types are supported:
-            1. (arg0: numpy.ndarray[float32[1, 3], flags.writeable]) -> None
+            1. (arg0: numpy.ndarray[numpy.float32[1, 3], flags.writeable]) -> None
 
         Invoked with: """ + repr(np.array([ 5.,  4.,  3.], dtype='float32'))  # noqa: E501 line too long
 
@@ -187,7 +188,7 @@ def test_negative_stride_from_python(msg):
         m.double_threec(second_col)
     assert msg(excinfo.value) == """
         double_threec(): incompatible function arguments. The following argument types are supported:
-            1. (arg0: numpy.ndarray[float32[3, 1], flags.writeable]) -> None
+            1. (arg0: numpy.ndarray[numpy.float32[3, 1], flags.writeable]) -> None
 
         Invoked with: """ + repr(np.array([ 7.,  4.,  1.], dtype='float32'))  # noqa: E501 line too long
 
@@ -607,17 +608,19 @@ def test_special_matrix_objects():
 
 def test_dense_signature(doc):
     assert doc(m.double_col) == """
-        double_col(arg0: numpy.ndarray[float32[m, 1]]) -> numpy.ndarray[float32[m, 1]]
+        double_col(arg0: numpy.ndarray[numpy.float32[m, 1]]) -> numpy.ndarray[numpy.float32[m, 1]]
     """
     assert doc(m.double_row) == """
-        double_row(arg0: numpy.ndarray[float32[1, n]]) -> numpy.ndarray[float32[1, n]]
+        double_row(arg0: numpy.ndarray[numpy.float32[1, n]]) -> numpy.ndarray[numpy.float32[1, n]]
     """
-    assert doc(m.double_complex) == """
-        double_complex(arg0: numpy.ndarray[complex64[m, 1]]) -> numpy.ndarray[complex64[m, 1]]
-    """
-    assert doc(m.double_mat_rm) == """
-        double_mat_rm(arg0: numpy.ndarray[float32[m, n]]) -> numpy.ndarray[float32[m, n]]
-    """
+    assert doc(m.double_complex) == ("""
+        double_complex(arg0: numpy.ndarray[numpy.complex64[m, 1]])"""
+                                     """ -> numpy.ndarray[numpy.complex64[m, 1]]
+    """)
+    assert doc(m.double_mat_rm) == ("""
+        double_mat_rm(arg0: numpy.ndarray[numpy.float32[m, n]])"""
+                                    """ -> numpy.ndarray[numpy.float32[m, n]]
+    """)
 
 
 def test_named_arguments():
@@ -641,8 +644,8 @@ def test_named_arguments():
     assert str(excinfo.value) == 'Nonconformable matrices!'
 
 
-@pytest.requires_eigen_and_scipy
 def test_sparse():
+    pytest.importorskip("scipy")
     assert_sparse_equal_ref(m.sparse_r())
     assert_sparse_equal_ref(m.sparse_c())
     assert_sparse_equal_ref(m.sparse_copy_r(m.sparse_r()))
@@ -651,13 +654,13 @@ def test_sparse():
     assert_sparse_equal_ref(m.sparse_copy_c(m.sparse_r()))
 
 
-@pytest.requires_eigen_and_scipy
 def test_sparse_signature(doc):
+    pytest.importorskip("scipy")
     assert doc(m.sparse_copy_r) == """
-        sparse_copy_r(arg0: scipy.sparse.csr_matrix[float32]) -> scipy.sparse.csr_matrix[float32]
+        sparse_copy_r(arg0: scipy.sparse.csr_matrix[numpy.float32]) -> scipy.sparse.csr_matrix[numpy.float32]
     """  # noqa: E501 line too long
     assert doc(m.sparse_copy_c) == """
-        sparse_copy_c(arg0: scipy.sparse.csc_matrix[float32]) -> scipy.sparse.csc_matrix[float32]
+        sparse_copy_c(arg0: scipy.sparse.csc_matrix[numpy.float32]) -> scipy.sparse.csc_matrix[numpy.float32]
     """  # noqa: E501 line too long
 
 

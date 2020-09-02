@@ -13,6 +13,8 @@
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 
+#include <algorithm>
+
 template<typename T>
 class NonZeroIterator {
     const T* ptr_;
@@ -318,6 +320,9 @@ TEST_SUBMODULE(sequences_and_iterators, m) {
         }
         return l;
     });
+
+    // test_sequence_length: check that Python sequences can be converted to py::sequence.
+    m.def("sequence_length", [](py::sequence seq) { return seq.size(); });
 
     // Make sure that py::iterator works with std algorithms
     m.def("count_none", [](py::object o) {

@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 import pytest
-import sys
-from pybind11_tests import stl_binders as m
 
-with pytest.suppress(ImportError):
-    import numpy as np
+import env  # noqa: F401
+
+from pybind11_tests import stl_binders as m
 
 
 def test_vector_int():
@@ -67,15 +67,15 @@ def test_vector_int():
     v_int2.clear()
     assert len(v_int2) == 0
 
-# related to the PyPy's buffer protocol.
-@pytest.unsupported_on_pypy
+
+# Older PyPy's failed here, related to the PyPy's buffer protocol.
 def test_vector_buffer():
     b = bytearray([1, 2, 3, 4])
     v = m.VectorUChar(b)
     assert v[1] == 2
     v[2] = 5
     mv = memoryview(v)  # We expose the buffer interface
-    if sys.version_info.major > 2:
+    if not env.PY2:
         assert mv[2] == 5
         mv[2] = 6
     else:
@@ -83,14 +83,18 @@ def test_vector_buffer():
         mv[2] = '\x06'
     assert v[2] == 6
 
+    if not env.PY2:
+        mv = memoryview(b)
+        v = m.VectorUChar(mv[::2])
+        assert v[1] == 3
+
     with pytest.raises(RuntimeError) as excinfo:
         m.create_undeclstruct()  # Undeclared struct contents, no buffer interface
     assert "NumPy type info missing for " in str(excinfo.value)
 
 
-@pytest.unsupported_on_pypy
-@pytest.requires_numpy
 def test_vector_buffer_numpy():
+    np = pytest.importorskip("numpy")
     a = np.array([1, 2, 3, 4], dtype=np.int32)
     with pytest.raises(TypeError):
         m.VectorInt(a)
@@ -116,6 +120,10 @@ def test_vector_buffer_numpy():
     v = m.VectorStruct(np.zeros(3, dtype=np.dtype([('w', 'bool'), ('x', 'I'),
                                                    ('y', 'float64'), ('z', 'bool')], align=True)))
     assert len(v) == 3
+
+    b = np.array([1, 2, 3, 4], dtype=np.uint8)
+    v = m.VectorUChar(b[::2])
+    assert v[1] == 3
 
 
 def test_vector_bool():
@@ -221,7 +229,8 @@ def test_noncopyable_containers():
         for j in range(0, 5):
             assert nvnc[i][j].value == j + 1
 
-    for k, v in nvnc.items():
+    # Note: maps do not have .values()
+    for _, v in nvnc.items():
         for i, j in enumerate(v, start=1):
             assert j.value == i
 
@@ -232,7 +241,7 @@ def test_noncopyable_containers():
             assert nmnc[i][j].value == 10 * j
 
     vsum = 0
-    for k_o, v_o in nmnc.items():
+    for _, v_o in nmnc.items():
         for k_i, v_i in v_o.items():
             assert v_i.value == 10 * k_i
             vsum += v_i.value
@@ -246,7 +255,7 @@ def test_noncopyable_containers():
             assert numnc[i][j].value == 10 * j
 
     vsum = 0
-    for k_o, v_o in numnc.items():
+    for _, v_o in numnc.items():
         for k_i, v_i in v_o.items():
             assert v_i.value == 10 * k_i
             vsum += v_i.value
