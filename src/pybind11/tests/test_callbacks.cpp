@@ -97,6 +97,8 @@ TEST_SUBMODULE(callbacks, m) {
     // test_cpp_function_roundtrip
     /* Test if passing a function pointer from C++ -> Python -> C++ yields the original pointer */
     m.def("dummy_function", &dummy_function);
+    m.def("dummy_function_overloaded", [](int i, int j) { return i + j; });
+    m.def("dummy_function_overloaded", &dummy_function);
     m.def("dummy_function2", [](int i, int j) { return i + j; });
     m.def("roundtrip", [](std::function<int(int)> f, bool expect_none = false) {
         if (expect_none && f)
@@ -117,7 +119,14 @@ TEST_SUBMODULE(callbacks, m) {
         }
     });
 
-    class AbstractBase { public: virtual unsigned int func() = 0; };
+    class AbstractBase {
+    public:
+        // [workaround(intel)] = default does not work here
+        // Defaulting this destructor results in linking errors with the Intel compiler
+        // (in Debug builds only, tested with icpc (ICC) 2021.1 Beta 20200827)
+        virtual ~AbstractBase() {};  // NOLINT(modernize-use-equals-default)
+        virtual unsigned int func() = 0;
+    };
     m.def("func_accepting_func_accepting_base", [](std::function<double(AbstractBase&)>) { });
 
     struct MovableObject {
@@ -164,5 +173,11 @@ TEST_SUBMODULE(callbacks, m) {
         // spawn worker threads
         for (auto i : work)
             start_f(py::cast<int>(i));
+    });
+
+    m.def("callback_num_times", [](py::function f, std::size_t num) {
+        for (std::size_t i = 0; i < num; i++) {
+            f();
+        }
     });
 }

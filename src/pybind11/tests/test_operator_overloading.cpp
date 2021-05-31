@@ -73,26 +73,26 @@ namespace std {
         // Not a good hash function, but easy to test
         size_t operator()(const Vector2 &) { return 4; }
     };
-}
+} // namespace std
 
 // Not a good abs function, but easy to test.
 std::string abs(const Vector2&) {
     return "abs(Vector2)";
 }
 
-// MSVC warns about unknown pragmas, and warnings are errors.
-#ifndef _MSC_VER
+// MSVC & Intel warns about unknown pragmas, and warnings are errors.
+#if !defined(_MSC_VER) && !defined(__INTEL_COMPILER)
   #pragma GCC diagnostic push
   // clang 7.0.0 and Apple LLVM 10.0.1 introduce `-Wself-assign-overloaded` to
   // `-Wall`, which is used here for overloading (e.g. `py::self += py::self `).
   // Here, we suppress the warning using `#pragma diagnostic`.
   // Taken from: https://github.com/RobotLocomotion/drake/commit/aaf84b46
   // TODO(eric): This could be resolved using a function / functor (e.g. `py::self()`).
-  #if (__APPLE__) && (__clang__)
-    #if (__clang_major__ >= 10) && (__clang_minor__ >= 0) && (__clang_patchlevel__ >= 1)
+  #if defined(__APPLE__) && defined(__clang__)
+    #if (__clang_major__ >= 10)
       #pragma GCC diagnostic ignored "-Wself-assign-overloaded"
     #endif
-  #elif (__clang__)
+  #elif defined(__clang__)
     #if (__clang_major__ >= 7)
       #pragma GCC diagnostic ignored "-Wself-assign-overloaded"
     #endif
@@ -221,6 +221,6 @@ TEST_SUBMODULE(operators, m) {
         .def(py::self == py::self);
 }
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__INTEL_COMPILER)
   #pragma GCC diagnostic pop
 #endif
