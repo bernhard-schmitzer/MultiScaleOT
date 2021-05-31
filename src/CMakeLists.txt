@@ -85,37 +85,42 @@ endif ( USE_SINKHORN )
 option(USE_PYBIND "Compile pybind11 interface" ON)
 
 #set(PYTHON_PATH "/usr/bin" CACHE PATH "Location of python3 executable for python interface compilation")
-get_filename_component(PYTHON_PATH "${PYTHON_EXECUTABLE}" DIRECTORY)
+#get_filename_component(PYTHON_PATH "${PYTHON_EXECUTABLE}" DIRECTORY)
 
 if( USE_PYBIND )
 
-	exec_program("${PYTHON_PATH}/python3-config"
-			ARGS "--extension-suffix"
-			OUTPUT_VARIABLE PYTHON_EXTENSION_SUFFIX
-			RETURN_VALUE PYTHON_EXTENSION_SUFFIX_NOT_FOUND
-			)
+	add_subdirectory(pybind11)
+	#exec_program("${PYTHON_PATH}/python3-config"
+	#		ARGS "--extension-suffix"
+	#		OUTPUT_VARIABLE PYTHON_EXTENSION_SUFFIX
+	#		RETURN_VALUE PYTHON_EXTENSION_SUFFIX_NOT_FOUND
+	#		)
 
-	if(NOT PYTHON_EXTENSION_SUFFIX_NOT_FOUND EQUAL 0)
-		message(FATAL_ERROR "Did not find python3-config for extension suffix.")
-	endif(NOT PYTHON_EXTENSION_SUFFIX_NOT_FOUND EQUAL 0)
+	#if(NOT PYTHON_EXTENSION_SUFFIX_NOT_FOUND EQUAL 0)
+	#	message(FATAL_ERROR "Did not find python3-config for extension suffix.")
+	#endif(NOT PYTHON_EXTENSION_SUFFIX_NOT_FOUND EQUAL 0)
 
-	exec_program("${PYTHON_PATH}/python3-config"
-			ARGS "--includes"
-			OUTPUT_VARIABLE PYTHON_INCLUDES
-			RETURN_VALUE PYTHON_INCLUDES_NOT_FOUND
-			)
+	#exec_program("${PYTHON_PATH}/python3-config"
+	#		ARGS "--includes"
+	#		OUTPUT_VARIABLE PYTHON_INCLUDES
+	#		RETURN_VALUE PYTHON_INCLUDES_NOT_FOUND
+	#		)
 
-	if(NOT PYTHON_INCLUDES_NOT_FOUND EQUAL 0)
-		message(FATAL_ERROR "Did not find python3-config for includes.")
-	endif(NOT PYTHON_INCLUDES_NOT_FOUND EQUAL 0)
+	#if(NOT PYTHON_INCLUDES_NOT_FOUND EQUAL 0)
+	#	message(FATAL_ERROR "Did not find python3-config for includes.")
+	#endif(NOT PYTHON_INCLUDES_NOT_FOUND EQUAL 0)
 
 
-	separate_arguments(PYTHON_INCLUDES UNIX_COMMAND "${PYTHON_INCLUDES}")
+	#separate_arguments(PYTHON_INCLUDES UNIX_COMMAND "${PYTHON_INCLUDES}")
 
-	set(PYBIND_COMPILE_OPTIONS ${PYTHON_INCLUDES})
+	#set(PYBIND_COMPILE_OPTIONS ${PYTHON_INCLUDES})
+	set(PYBIND_COMPILE_OPTIONS "")
 	if( USE_SINKHORN )
 		set(PYBIND_COMPILE_OPTIONS ${PYBIND_COMPILE_OPTIONS} -DUSE_SINKHORN)
 	endif( USE_SINKHORN )
+	if( USE_CPLEX )
+		set(PYBIND_COMPILE_OPTIONS ${PYBIND_COMPILE_OPTIONS} -DUSE_CPLEX)
+	endif( USE_CPLEX )
 
 
 	add_subdirectory (pybind11_interface)
