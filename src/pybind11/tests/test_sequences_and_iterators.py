@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
-from pybind11_tests import sequences_and_iterators as m
+
 from pybind11_tests import ConstructorStats
+from pybind11_tests import sequences_and_iterators as m
 
 
 def isclose(a, b, rel_tol=1e-05, abs_tol=0.0):
@@ -13,6 +14,17 @@ def allclose(a_list, b_list, rel_tol=1e-05, abs_tol=0.0):
     return all(
         isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol) for a, b in zip(a_list, b_list)
     )
+
+
+def test_slice_constructors():
+    assert m.make_forward_slice_size_t() == slice(0, -1, 1)
+    assert m.make_reversed_slice_object() == slice(None, None, -1)
+
+
+@pytest.mark.skipif(not m.has_optional, reason="no <optional>")
+def test_slice_constructors_explicit_optional():
+    assert m.make_reversed_slice_size_t_optional() == slice(None, None, -1)
+    assert m.make_reversed_slice_size_t_optional_verbose() == slice(None, None, -1)
 
 
 def test_generalized_iterators():
@@ -104,7 +116,7 @@ def test_sequence():
 
 
 def test_sequence_length():
-    """#2076: Exception raised by len(arg) should be propagated """
+    """#2076: Exception raised by len(arg) should be propagated"""
 
     class BadLen(RuntimeError):
         pass
@@ -187,7 +199,7 @@ def test_iterator_passthrough():
 
 
 def test_iterator_rvp():
-    """#388: Can't make iterators via make_iterator() with different r/v policies """
+    """#388: Can't make iterators via make_iterator() with different r/v policies"""
     import pybind11_tests.sequences_and_iterators as m
 
     assert list(m.make_iterator_1()) == [1, 2, 3]

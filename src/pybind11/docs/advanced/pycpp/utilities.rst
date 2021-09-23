@@ -47,6 +47,17 @@ redirects output to the corresponding Python streams:
         call_noisy_func();
     });
 
+.. warning::
+
+    The implementation in ``pybind11/iostream.h`` is NOT thread safe. Multiple
+    threads writing to a redirected ostream concurrently cause data races
+    and potentially buffer overflows. Therefore it is currently a requirement
+    that all (possibly) concurrent redirected ostream writes are protected by
+    a mutex. #HelpAppreciated: Work on iostream.h thread safety. For more
+    background see the discussions under
+    `PR #2982 <https://github.com/pybind/pybind11/pull/2982>`_ and
+    `PR #2995 <https://github.com/pybind/pybind11/pull/2995>`_.
+
 This method respects flushes on the output streams and will flush if needed
 when the scoped guard is destroyed. This allows the output to be redirected in
 real time, such as to a Jupyter notebook. The two arguments, the C++ stream and
@@ -55,7 +66,7 @@ extra type, `py::scoped_estream_redirect <scoped_estream_redirect>`, is identica
 except for defaulting to ``std::cerr`` and ``sys.stderr``; this can be useful with
 `py::call_guard`, which allows multiple items, but uses the default constructor:
 
-.. code-block:: py
+.. code-block:: cpp
 
     // Alternative: Call single function using call guard
     m.def("noisy_func", &call_noisy_function,

@@ -136,7 +136,7 @@ a virtual method call.
     u'woof! woof! woof! '
     >>> class Cat(Animal):
     ...     def go(self, n_times):
-    ...             return "meow! " * n_times
+    ...         return "meow! " * n_times
     ...
     >>> c = Cat()
     >>> call_go(c)
@@ -159,8 +159,9 @@ Here is an example:
 
     class Dachshund(Dog):
         def __init__(self, name):
-            Dog.__init__(self) # Without this, a TypeError is raised.
+            Dog.__init__(self)  # Without this, a TypeError is raised.
             self.name = name
+
         def bark(self):
             return "yap!"
 
@@ -804,7 +805,7 @@ to bind these two functions:
             }
         ));
 
-The ``__setstate__`` part of the ``py::picke()`` definition follows the same
+The ``__setstate__`` part of the ``py::pickle()`` definition follows the same
 rules as the single-argument version of ``py::init()``. The return type can be
 a value, pointer or holder type. See :ref:`custom_constructors` for details.
 
@@ -1153,6 +1154,7 @@ error:
 
     >>> class PyFinalChild(IsFinal):
     ...     pass
+    ...
     TypeError: type 'IsFinal' is not an acceptable base type
 
 .. note:: This attribute is currently ignored on PyPy
@@ -1247,7 +1249,7 @@ Accessing the type object
 
 You can get the type object from a C++ class that has already been registered using:
 
-.. code-block:: python
+.. code-block:: cpp
 
     py::type T_py = py::type::of<T>();
 

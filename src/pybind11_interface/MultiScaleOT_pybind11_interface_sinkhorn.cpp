@@ -43,10 +43,10 @@ py::tuple findKernelLine(TSinkhornKernelGenerator *kernelGenerator, int layerFin
 #endif
 
 
+#ifdef USE_SINKHORN
 void init_sinkhorn(py::module_ &m) {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    #ifdef USE_SINKHORN
     py::class_<TKernelMatrix>(m, "TKernelMatrix")
         .def("getCSRData",[](const TKernelMatrix &kernel) {
             return SinkhornKernelGetCSRData(kernel);
@@ -429,9 +429,8 @@ void init_sinkhorn(py::module_ &m) {
         })
         .def_readwrite("kappa", &TSinkhornSolverBarycenterKLMarginals::kappa);
 
-    #endif // Sinkhorn
-
-
 
 }
+
+#endif // Sinkhorn
 
