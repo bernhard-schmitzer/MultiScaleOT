@@ -12,8 +12,7 @@ import numpy as np
 import scipy.sparse
 import MultiScaleOT
 
-# Create two images: a square and one rotated by 45deg
-# with approximately equal areas
+# Create two images: two disks with equal areas
 
 def createImage(size,posX,posY,radX,radY,intensity):
     posXImg=np.zeros((size,size),dtype=np.double)

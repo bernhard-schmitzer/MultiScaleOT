@@ -89,6 +89,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="plot_0010_multiscale-setup.html">1d Sparse Sinkhorn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_0011_2d-image-interpolation.html">2d Image Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_0015_3d-pointclouds.html">2d Image Interpolation: Hellinger–Kantorovich distance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_0020_1d-barycenter.html">1d Barycenter with Sinkhorn</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">2d Image Interpolation: Hellinger–Kantorovich distance</a></li>
 </ul>
@@ -173,8 +174,7 @@
 <span class="kn">import</span> <span class="nn">scipy.sparse</span>
 <span class="kn">import</span> <span class="nn">MultiScaleOT</span>
 
-<span class="c1"># Create two images: a square and one rotated by 45deg</span>
-<span class="c1"># with approximately equal areas</span>
+<span class="c1"># Create two images: two disks with equal areas</span>
 
 <span class="k">def</span> <span class="nf">createImage</span><span class="p">(</span><span class="n">size</span><span class="p">,</span><span class="n">posX</span><span class="p">,</span><span class="n">posY</span><span class="p">,</span><span class="n">radX</span><span class="p">,</span><span class="n">radY</span><span class="p">,</span><span class="n">intensity</span><span class="p">):</span>
     <span class="n">posXImg</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">size</span><span class="p">,</span><span class="n">size</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
@@ -262,7 +262,7 @@
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0
-solving time:  11.514673948287964
+solving time:  11.615556716918945
 </pre></div>
 </div>
 <p>compare with full primal score: (this should be large wrt errorGoal)</p>
@@ -365,7 +365,7 @@ solving time:  11.514673948287964
 <li><img alt="../_images/sphx_glr_plot_0012_2d-HK-interpolation_007.png" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_0012_2d-HK-interpolation_007.png" />
 </li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  33.662 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  32.618 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-0012-2d-hk-interpolation-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/fb692dde6aa5f75756602ddac3dc028d/plot_0012_2d-HK-interpolation.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_0012_2d-HK-interpolation.py</span></code></a></p>
