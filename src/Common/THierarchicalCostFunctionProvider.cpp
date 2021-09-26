@@ -40,8 +40,8 @@ THierarchicalCostFunctionProvider_SquaredEuclidean::THierarchicalCostFunctionPro
 		bool _haveDuals,
 		double **_alpha, double **_beta,
 		double _scale,
-		bool _WFmode,
-		double _WFScale) :
+		bool _HKmode,
+		double _HKscale) :
 			THierarchicalCostFunctionProvider(
 				_xPos, _yPos,
 				_xRadii, _yRadii,
@@ -49,9 +49,9 @@ THierarchicalCostFunctionProvider_SquaredEuclidean::THierarchicalCostFunctionPro
 				_haveDuals,
 				_alpha, _beta) {
 	scale=_scale;
-	WFmode=_WFmode;
-	WFScale=_WFScale;
-	WFScaleSqr=std::pow(WFScale,2);
+	HKmode=_HKmode;
+	HKscale=_HKscale;
+	HKscaleSqr=std::pow(HKscale,2);
 	
 }
 
@@ -59,9 +59,9 @@ void THierarchicalCostFunctionProvider_SquaredEuclidean::setScale(const double _
 	scale=_scale;
 }
 
-void THierarchicalCostFunctionProvider_SquaredEuclidean::setWFScale(const double _WFScale) {
-	WFScale=_WFScale;
-	WFScaleSqr=std::pow(WFScale,2);
+void THierarchicalCostFunctionProvider_SquaredEuclidean::setHKscale(const double _HKscale) {
+	HKscale=_HKscale;
+	HKscaleSqr=std::pow(HKscale,2);
 }
 
 
@@ -87,14 +87,14 @@ double THierarchicalCostFunctionProvider_SquaredEuclidean::getCostAsym(int layer
 
 	result=scale*result;
 
-	if(!WFmode) {
+	if(!HKmode) {
 		return std::pow(result,2);
 	} else {
-		result=result/WFScale;
+		result=result/HKscale;
 		if(result>M_PI/2) {
 			return DBL_INFINITY;
 		} else {
-			return -2*WFScaleSqr*std::log(std::cos(result));
+			return -2*HKscaleSqr*std::log(std::cos(result));
 		}
 		
 	}

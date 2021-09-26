@@ -101,6 +101,51 @@ py::tuple getParticleDataTuple(const TParticleContainer &particleData) {
     return py::make_tuple(resultMass,resultPos);
 }
 
+// create TSparseCSRContainer from raw data
+TSparseCSRContainer getSparseCSRContainerFromData(
+        const TDoubleMatrix * const data,
+        const TInteger32Matrix * const indices, const TInteger32Matrix * const indptr,
+        const int xres, const int yres) {
+    TSparseCSRContainer result;
+    result.data.resize(data->dimensions[0]);
+    result.indices.resize(indices->dimensions[0]);
+    result.indptr.resize(indptr->dimensions[0]);
+    result.xres=xres;
+    result.yres=yres;
+    result.nonZeros=data->dimensions[0];
+    std::memcpy(result.data.data(),data->data,sizeof(double)*result.nonZeros);
+    std::memcpy(result.indices.data(),indices->data,sizeof(int)*result.nonZeros);
+    std::memcpy(result.indptr.data(),indptr->data,sizeof(int)*(result.yres+1));
+    
+    return result;
+}
+
+// create TSparseCSRContainer from python data
+TSparseCSRContainer getSparseCSRContainerFromData(
+        py::array_t<double> &data,
+        py::array_t<int> &indices, py::array_t<int> &indptr,
+        const int xres, const int yres) {
+
+    py::buffer_info bufferData = data.request();
+    py::buffer_info bufferIndices = indices.request();
+    py::buffer_info bufferIndptr = indptr.request();
+
+
+    TSparseCSRContainer result;
+    result.data.resize(bufferData.shape[0]);
+    result.indices.resize(bufferIndices.shape[0]);
+    result.indptr.resize(bufferIndptr.shape[0]);
+    result.xres=xres;
+    result.yres=yres;
+    result.nonZeros=bufferData.shape[0];
+    std::memcpy(result.data.data(),bufferData.ptr,sizeof(double)*result.nonZeros);
+    std::memcpy(result.indices.data(),bufferIndices.ptr,sizeof(int)*result.nonZeros);
+    std::memcpy(result.indptr.data(),bufferIndptr.ptr,sizeof(int)*(result.yres+1));
+    
+    return result;
+}
+
+
 // create TSparsePosContainer from raw data
 TSparsePosContainer getSparsePosContainerFromData(
         const TDoubleMatrix * const mass,

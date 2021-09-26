@@ -9,8 +9,8 @@ constexpr int EXAMPLE_MODE_UNBALANCED=1;
 
 
 int main(int argc, char* argv[]);
-int example_minimal(int example_mode, double WFRlenScale);
-int example_file(int example_mode, double WFRlenScale);
+int example_minimal(int example_mode, double HKscale);
+int example_file(int example_mode, double HKscale);
 
 int main(int argc, char* argv[]) {
 	#ifdef VERBOSE
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 }
 
 
-int example_minimal(int example_mode, double WFRlenScale) {
+int example_minimal(int example_mode, double HKscale) {
 
 	// two reference measures, given as point clouds
 	double muXdat[]={0.5, 0.5};
@@ -91,17 +91,17 @@ int example_minimal(int example_mode, double WFRlenScale) {
 	int layerFinest=depth;	
 	int dim=posX.dimensions[1]; // spatial dimension
 	// manage unbalanced mode
-	double WFRKLweight=std::pow(WFRlenScale,2);
-	bool WFRmode;
+	double HKKLweight=std::pow(HKscale,2);
+	bool HKmode;
 	double errorGoal;
 	switch(example_mode) {
 	case EXAMPLE_MODE_UNBALANCED:
 		errorGoal=1E-4;
-		WFRmode=true;
+		HKmode=true;
 		break;
 	default:
 		errorGoal=1E-4;
-		WFRmode=false;
+		HKmode=false;
 		break;
 	}
 
@@ -138,7 +138,7 @@ int example_minimal(int example_mode, double WFRlenScale) {
 			true,
 			NULL, NULL,
 			1.,
-			WFRmode, WFRlenScale);
+			HKmode, HKscale);
 	}
 
 	
@@ -180,7 +180,7 @@ int example_minimal(int example_mode, double WFRlenScale) {
 
 	TSinkhornSolverBarycenter *SinkhornSolver;
 	// hard marginals
-	if(WFRmode) {
+	if(HKmode) {
 		SinkhornSolver = new TSinkhornSolverBarycenterKLMarginals(MultiScaleSetupCenter.nLayers,
 				epsScalingHandler.nEpsLists, epsScalingHandler.epsLists,
 				layerCoarsest, layerFinest,
@@ -192,7 +192,7 @@ int example_minimal(int example_mode, double WFRlenScale) {
 				MultiScaleSetupBarycenter->muH, MultiScaleSetupBarycenter->muZH,
 				MultiScaleSetupBarycenter->alphaH, MultiScaleSetupBarycenter->betaH,
 				costProvider,
-				WFRKLweight
+				HKKLweight
 				);
 	} else {
 		SinkhornSolver = new TSinkhornSolverBarycenter(MultiScaleSetupCenter.nLayers,
@@ -249,7 +249,7 @@ int example_minimal(int example_mode, double WFRlenScale) {
 }
 
 
-int example_file(int example_mode, double WFRlenScale) {
+int example_file(int example_mode, double HKscale) {
 
 	// read raw data from file
 	char filenamePoints0[]="data/barycenter/simple/64_0_pos.dat";
@@ -330,17 +330,17 @@ int example_file(int example_mode, double WFRlenScale) {
 	int layerCoarsest=2;
 	int layerFinest=depth;
 	// manage unbalanced mode
-	double WFRKLweight=std::pow(WFRlenScale,2);
-	bool WFRmode;
+	double HKKLweight=std::pow(HKscale,2);
+	bool HKmode;
 	double errorGoal;
 	switch(example_mode) {
 	case EXAMPLE_MODE_UNBALANCED:
 		errorGoal=1E-1;
-		WFRmode=true;
+		HKmode=true;
 		break;
 	default:
 		errorGoal=1E-3;
-		WFRmode=false;
+		HKmode=false;
 		break;
 	}
 
@@ -376,7 +376,7 @@ int example_file(int example_mode, double WFRlenScale) {
 			true,
 			NULL,NULL,
 			1.,
-			WFRmode, WFRlenScale);
+			HKmode, HKscale);
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// barycenter setup object
@@ -416,7 +416,7 @@ int example_file(int example_mode, double WFRlenScale) {
 
 	TSinkhornSolverBarycenter *SinkhornSolver;
 	// hard marginals
-	if(WFRmode) {
+	if(HKmode) {
 		SinkhornSolver = new TSinkhornSolverBarycenterKLMarginals(MultiScaleSetupCenter.nLayers,
 				epsScalingHandler.nEpsLists, epsScalingHandler.epsLists,
 				layerCoarsest, layerFinest,
@@ -428,7 +428,7 @@ int example_file(int example_mode, double WFRlenScale) {
 				MultiScaleSetupBarycenter->muH, MultiScaleSetupBarycenter->muZH,
 				MultiScaleSetupBarycenter->alphaH, MultiScaleSetupBarycenter->betaH,
 				costProvider,
-				WFRKLweight
+				HKKLweight
 				);
 	} else {
 		SinkhornSolver = new TSinkhornSolverBarycenter(MultiScaleSetupCenter.nLayers,
@@ -463,7 +463,7 @@ int example_file(int example_mode, double WFRlenScale) {
 	}
 	barycenter=barycenter/nMarginals;
 	// write to file
-	if(WFRmode) {
+	if(HKmode) {
 		//writeFile<double>("results/barycenter_simple-64_unbalanced.dat", barycenter.data(), centerNPoints);
 		writeFile<double>("results/barycenter_groups-256_unbalanced.dat", barycenter.data(), centerNPoints);
 	} else {

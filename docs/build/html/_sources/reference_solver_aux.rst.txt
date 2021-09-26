@@ -1,6 +1,11 @@
 Auxillary objects for Sinkhorn solvers
 ==============================================================
 
+This section includes auxillary classes that are needed to fully define a Sinkhorn transport problem, such as cost functions, schedule for the entropic regularization parameter (aka epsilon scaling), and minor parameters.
+
+Transport cost functions
+--------------------------
+
 .. autoclass:: MultiScaleOT.THierarchicalCostFunctionProvider
    :members:
 
@@ -8,8 +13,18 @@ Auxillary objects for Sinkhorn solvers
    :members:
    :special-members:
 
+.. autoclass:: MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean
+   :members:
+   :special-members:
+
+Epsilon scaling
+--------------------------
+
 .. autoclass:: MultiScaleOT.TEpsScalingHandler
    :members:
+
+Minor parameters of Sinkhorn algorithm
+----------------------------------------------
 
 .. autoclass:: MultiScaleOT.TSinkhornSolverParameters
    :members:

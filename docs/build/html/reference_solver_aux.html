@@ -89,11 +89,16 @@
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Module reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="reference_multiscale.html">Multiscale representation</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Auxillary objects for Sinkhorn solvers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Auxillary objects for Sinkhorn solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#transport-cost-functions">Transport cost functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#epsilon-scaling">Epsilon scaling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minor-parameters-of-sinkhorn-algorithm">Minor parameters of Sinkhorn algorithm</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="reference_solver_standard.html">Sinkorn solver (standard)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_solver_unbalanced.html">Sinkorn solver (unbalanced)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_solver_barycenter.html">Barycenters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_periphery.html">Periphery functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_periphery.html">Periphery functions and classes</a></li>
 </ul>
 </li>
 </ul>
@@ -164,6 +169,9 @@
             
   <div class="section" id="auxillary-objects-for-sinkhorn-solvers">
 <h1>Auxillary objects for Sinkhorn solvers<a class="headerlink" href="#auxillary-objects-for-sinkhorn-solvers" title="Permalink to this headline">¶</a></h1>
+<p>This section includes auxillary classes that are needed to fully define a Sinkhorn transport problem, such as cost functions, schedule for the entropic regularization parameter (aka epsilon scaling), and minor parameters.</p>
+<div class="section" id="transport-cost-functions">
+<h2>Transport cost functions<a class="headerlink" href="#transport-cost-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MultiScaleOT.THierarchicalCostFunctionProvider">
 <em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">THierarchicalCostFunctionProvider</code><a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider" title="Permalink to this definition">¶</a></dt>
@@ -206,31 +214,54 @@
 <dd><p>Represents the squared Euclidean distance cost function.</p>
 <dl class="method">
 <dt id="MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean</em>, <em class="sig-param">MultiScaleSetupX: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">MultiScaleSetupY: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">WFmode: bool = False</em>, <em class="sig-param">WFlenscale: float = 1.0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean</em>, <em class="sig-param">MultiScaleSetupX: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">MultiScaleSetupY: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">HKmode: bool = False</em>, <em class="sig-param">HKscale: float = 1.0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>MultiScaleSetupX</strong> – TMultiScaleSetup instance describing first marginal</p></li>
 <li><p><strong>MultiScaleSetupY</strong> – TMultiScaleSetup instance describing second marginal</p></li>
-<li><p><strong>WFmode</strong> – whether Hellinger–Kantorovich mode should be activated</p></li>
-<li><p><strong>WFlenscale</strong> – trade-off weight between transport and mass change. Maximal transport distance is WFlenscale*pi/2.</p></li>
+<li><p><strong>HKmode</strong> – whether Hellinger–Kantorovich mode should be activated</p></li>
+<li><p><strong>HKscale</strong> – trade-off weight between transport and mass change. Maximal transport distance is HKscale*pi/2.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setHKscale">
+<code class="sig-name descname">setHKscale</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean</em>, <em class="sig-param">arg0: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setHKscale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setScale">
 <code class="sig-name descname">setScale</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean</em>, <em class="sig-param">arg0: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setScale" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">THierarchicalCostFunctionProvider_PEuclidean</code><a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the Euclidean distance cost function to power p.</p>
 <dl class="method">
-<dt id="MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setWFScale">
-<code class="sig-name descname">setWFScale</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean</em>, <em class="sig-param">arg0: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setWFScale" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean</em>, <em class="sig-param">MultiScaleSetupX: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">MultiScaleSetupY: MultiScaleOT.TMultiScaleSetup</em>, <em class="sig-param">p: float = 2.0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>MultiScaleSetupX</strong> – TMultiScaleSetup instance describing first marginal</p></li>
+<li><p><strong>MultiScaleSetupY</strong> – TMultiScaleSetup instance describing second marginal</p></li>
+<li><p><strong>p</strong> – exponent for distance</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="epsilon-scaling">
+<h2>Epsilon scaling<a class="headerlink" href="#epsilon-scaling" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MultiScaleOT.TEpsScalingHandler">
 <em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TEpsScalingHandler</code><a class="headerlink" href="#MultiScaleOT.TEpsScalingHandler" title="Permalink to this definition">¶</a></dt>
@@ -262,6 +293,9 @@
 
 </dd></dl>
 
+</div>
+<div class="section" id="minor-parameters-of-sinkhorn-algorithm">
+<h2>Minor parameters of Sinkhorn algorithm<a class="headerlink" href="#minor-parameters-of-sinkhorn-algorithm" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MultiScaleOT.TSinkhornSolverParameters">
 <em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TSinkhornSolverParameters</code><a class="headerlink" href="#MultiScaleOT.TSinkhornSolverParameters" title="Permalink to this definition">¶</a></dt>
@@ -273,6 +307,7 @@
 
 </dd></dl>
 
+</div>
 </div>
 
 

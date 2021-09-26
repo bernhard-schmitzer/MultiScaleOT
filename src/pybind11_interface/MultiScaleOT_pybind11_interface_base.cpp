@@ -39,19 +39,19 @@ TParticleContainer PyInterpolateEuclidean(
 }
 
 
-TParticleContainer PyInterpolateEuclideanWFR(
+TParticleContainer PyInterpolateEuclideanHK(
         TSparsePosContainer &couplingData,
         double *muXEff, double *muYEff,
         double *muX, double *muY,
-        double *posX, double *posY, int dim, double t, double WFScale) {
+        double *posX, double *posY, int dim, double t, double HKscale) {
  
     TGeometry_Euclidean geometry;
         
-    TParticleContainer result=ModelWFR_Interpolate<TGeometry_Euclidean>(
+    TParticleContainer result=ModelHK_Interpolate<TGeometry_Euclidean>(
             couplingData,
             muXEff, muYEff, muX, muY,
             posX, posY,
-            dim, t, WFScale, geometry);
+            dim, t, HKscale, geometry);
 
     return result;
 
@@ -113,14 +113,20 @@ PYBIND11_MODULE(MultiScaleOT, m) {
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-    py::class_<TSparseCSRContainer>(m,"TSparseCSRContainer")
+    py::class_<TSparseCSRContainer>(m,"TSparseCSRContainer","Sparse container for coupling data, using the scipy.sparse.csr_matrix format.")
+        .def(py::init([](py::array_t<double> &data, py::array_t<int> &indices, py::array_t<int> &indptr,
+                const int xres, const int yres) {
+            return getSparseCSRContainerFromData(data,indices,indptr,xres,yres);
+            }),
+            py::arg("data"),py::arg("indices"),py::arg("indptr"),py::arg("xres"),py::arg("yres")
+            )
         .def("getDataTuple",[](const TSparseCSRContainer &csrContainer) {
             return getSparseCSRDataTuple(csrContainer);
-        });
+        },"Return list of non-zero entries, column indices, and row separation indices.");
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-    py::class_<TSparsePosContainer>(m,"TSparsePosContainer")
+    py::class_<TSparsePosContainer>(m,"TSparsePosContainer","Sparse container for coupling data, using the scipy.sparse.coo_matrix format.")
         .def(py::init([](py::array_t<double> &mass, py::array_t<int> &posX, py::array_t<int> &posY,
                 const int xres, const int yres) {
             return getSparsePosContainerFromData(mass,posX,posY,xres,yres);
@@ -129,18 +135,22 @@ PYBIND11_MODULE(MultiScaleOT, m) {
             )
         .def("getDataTuple",[](const TSparsePosContainer &posContainer) {
             return getSparsePosDataTuple(posContainer);
-        });
+        },"Return list of non-zero values, row and column indices.");
  
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-    py::class_<TParticleContainer>(m,"TParticleContainer")
+    py::class_<TParticleContainer>(m,"TParticleContainer","Container for list of mass particles, contains an array of masses and an array for locations.")
         .def(py::init([](py::array_t<double> &mass, py::array_t<double> &pos) {
             return getParticleContainerFromData(mass,pos);
             }),
-            py::arg("mass"),py::arg("pos")
+            py::arg("mass"),py::arg("pos"),
+            R"(
+            Args:
+                mu: 1d double array of particle masses
+                pos: 2d double array of particle locations)"
             )
         .def("getDataTuple",[](const TParticleContainer &particleContainer) {
             return getParticleDataTuple(particleContainer);
-        });
+        },"Return list of masses and positions.");
 
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -541,7 +551,7 @@ PYBIND11_MODULE(MultiScaleOT, m) {
         .def(py::init([](
                 TMultiScaleSetup *MultiScaleSetupX,
                 TMultiScaleSetup *MultiScaleSetupY,
-                bool WFmode, double WFlenscale) {
+                bool HKmode, double HKscale) {
             return new THierarchicalCostFunctionProvider_SquaredEuclidean(
                      MultiScaleSetupX->posH, MultiScaleSetupY->posH,
                     MultiScaleSetupX->radii, MultiScaleSetupY->radii,
@@ -549,23 +559,23 @@ PYBIND11_MODULE(MultiScaleOT, m) {
                     true,
                     MultiScaleSetupX->alphaH, MultiScaleSetupY->alphaH,
                     1.,
-                    WFmode, WFlenscale
+                    HKmode, HKscale
                     );
         }),
-            py::arg("MultiScaleSetupX"),py::arg("MultiScaleSetupY"),py::arg("WFmode")=false,py::arg("WFlenscale")=1.,
+            py::arg("MultiScaleSetupX"),py::arg("MultiScaleSetupY"),py::arg("HKmode")=false,py::arg("HKscale")=1.,
             R"(
             Args:
                 MultiScaleSetupX: TMultiScaleSetup instance describing first marginal
                 MultiScaleSetupY: TMultiScaleSetup instance describing second marginal
-                WFmode: whether Hellinger--Kantorovich mode should be activated
-                WFlenscale: trade-off weight between transport and mass change. Maximal transport distance is WFlenscale*pi/2.
+                HKmode: whether Hellinger--Kantorovich mode should be activated
+                HKscale: trade-off weight between transport and mass change. Maximal transport distance is HKscale*pi/2.
             )"
         )
         //////////////////////////////////////////////////////
-        .def_readwrite("WFmode", &THierarchicalCostFunctionProvider_SquaredEuclidean::WFmode)
+        .def_readwrite("HKmode", &THierarchicalCostFunctionProvider_SquaredEuclidean::HKmode)
         .def_readwrite("layerBottom", &THierarchicalCostFunctionProvider_SquaredEuclidean::layerBottom)
         .def("setScale",&THierarchicalCostFunctionProvider_SquaredEuclidean::setScale)
-        .def("setWFScale",&THierarchicalCostFunctionProvider_SquaredEuclidean::setWFScale);
+        .def("setHKscale",&THierarchicalCostFunctionProvider_SquaredEuclidean::setHKscale);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -634,29 +644,29 @@ PYBIND11_MODULE(MultiScaleOT, m) {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
   
-    m.def("interpolateEuclideanWFR",
+    m.def("interpolateEuclideanHK",
             [](TSparsePosContainer &couplingData,
                     py::array_t<double> &muXEff, py::array_t<double> &muYEff,
                     py::array_t<double> &muX, py::array_t<double> &muY,
                     py::array_t<double> &posX, py::array_t<double> &posY,
-                    double t, double WFScale) {
+                    double t, double HKscale) {
                 py::buffer_info bufferX = posX.request();
                 py::buffer_info bufferY = posY.request();
-                return PyInterpolateEuclideanWFR(couplingData,
+                return PyInterpolateEuclideanHK(couplingData,
                         getDataPointerFromNumpyArray<double>(muXEff),
                         getDataPointerFromNumpyArray<double>(muYEff),
                         getDataPointerFromNumpyArray<double>(muX),
                         getDataPointerFromNumpyArray<double>(muY),
                         (double*) bufferX.ptr, (double*) bufferY.ptr,
-                        bufferX.shape[1], t, WFScale);
+                        bufferX.shape[1], t, HKscale);
             },
             py::arg("couplingData"),
             py::arg("muXEff"), py::arg("muYEff"),
             py::arg("muX"), py::arg("muY"),
             py::arg("posX"), py::arg("posY"),
-            py::arg("t"), py::arg("WFScale"),
+            py::arg("t"), py::arg("HKscale"),
             R"(
-            Compute displacement interpolation for Wasserstein--Fisher--Rao distance in Euclidean space.
+            Compute displacement interpolation for Hellinger--Kantorovich distance in Euclidean space.
             
             Args:
                 couplingData: TSparsePosContainer containing non-zero entries of coupling in sparse POS format
@@ -667,7 +677,7 @@ PYBIND11_MODULE(MultiScaleOT, m) {
                 posX: 2d numpy.float64 array containing positions of first marginal points
                 posY: 2d numpy.float64 array containing positions of second marginal points
                 t: float in [0,1], gives time at which to compute interpolation. t=0: first marginal, t=1: second marginal, t=0.5: midpoint.
-                WFScale: scale parameter determining trade-off between transport and mass change. Maximal travelling distance is given by pi/2*WFScale.)"
+                HKscale: scale parameter determining trade-off between transport and mass change. Maximal travelling distance is given by pi/2*HKscale.)"
             );
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 

@@ -9,7 +9,7 @@ int main(int argc, char* argv[]);
 int W2Grid();
 int Interpolation();
 int WpSphere();
-int WFR();
+int HK();
 int W2Grid_256x256();
 
 
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 			WpSphere();
 			break;
 		case '3':
-			WFR();
+			HK();
 			break;
 		case '4':
 			W2Grid_256x256();
@@ -419,8 +419,8 @@ int WpSphere() {
 
 
 
-int WFR() {
-	// Wasserstein--Fisher--Rao distance
+int HK() {
+	// Hellinger--Kantorovich distance
 	
 	double muXdat[]={6.101275e-03, 7.204110e-03, 8.535062e-03, 9.910280e-03, 1.104128e-02, 1.166015e-02, 1.167389e-02, 1.123175e-02, 6.704433e-03, 8.128397e-03, 9.854252e-03, 1.163492e-02, 1.309322e-02, 1.388739e-02, 1.390795e-02, 1.335771e-02, 7.292185e-03, 9.029484e-03, 1.114963e-02, 1.334184e-02, 1.513976e-02, 1.613150e-02, 1.620053e-02, 1.561280e-02, 7.908921e-03, 9.950044e-03, 1.245024e-02, 1.503625e-02, 1.715816e-02, 1.834562e-02, 1.848901e-02, 1.792387e-02, 8.567936e-03, 1.091527e-02, 1.379087e-02, 1.675992e-02, 1.919501e-02, 2.057699e-02, 2.080940e-02, 2.028992e-02, 9.247266e-03, 1.191367e-02, 1.517757e-02, 1.854434e-02, 2.131180e-02, 2.291030e-02, 2.324255e-02, 2.273922e-02, 9.914861e-03, 1.291900e-02, 1.659968e-02, 2.040437e-02, 2.355167e-02, 2.540296e-02, 2.582486e-02, 2.523923e-02, 1.055807e-02, 1.392742e-02, 1.806860e-02, 2.236741e-02, 2.594533e-02, 2.805923e-02, 2.849642e-02, 2.764292e-02};
 
@@ -449,9 +449,9 @@ int WFR() {
 	int layerCoarsest=1; // coarsest layer to solve on. sometimes skip a few layers at the top
 	int dim=2;
 
-	// parameters for WFR distance
-	double WFRlenScale=20;
-	double WFRKLweight=std::pow(WFRlenScale,2);
+	// parameters for HK distance
+	double HKscale=20;
+	double HKKLweight=std::pow(HKscale,2);
 
 	int msg; // store return codes from functions
 
@@ -469,7 +469,7 @@ int WFR() {
 		true,
 		MultiScaleSetupX.alphaH, MultiScaleSetupY.alphaH,
 		1.,
-		true, WFRlenScale);
+		true, HKscale);
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -502,7 +502,7 @@ int WFR() {
 			MultiScaleSetupX.muH, MultiScaleSetupY.muH,
 			MultiScaleSetupX.alphaH, MultiScaleSetupY.alphaH,
 			&costProvider,
-			WFRKLweight
+			HKKLweight
 			);
 	
 
@@ -512,7 +512,7 @@ int WFR() {
 	
 	// unregularized transport cost
 	double transportCost=SinkhornSolver.scorePrimalUnreg();
-	printf("len scale: %e\n",WFRlenScale);
+	printf("len scale: %e\n",HKscale);
 	printf("unregularized unbalanced transport cost: %e\n",transportCost);
 
 	

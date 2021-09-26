@@ -34,6 +34,26 @@ A convenient way to try them is via :ref:`Google colab <installation-google-cola
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example computes the optimal transport between two simple 2-dimensional images and then ge...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_0011_2d-image-interpolation_thumb.png
+
+     :ref:`sphx_glr_auto_examples_plot_0011_2d-image-interpolation.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_0011_2d-image-interpolation
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates on a simple 1-dimensional example the basic usage of the TSinkhornSol...">
 
 .. only:: html
@@ -51,6 +71,26 @@ A convenient way to try them is via :ref:`Google colab <installation-google-cola
    :hidden:
 
    /auto_examples/plot_0020_1d-barycenter
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example computes the Hellinger--Kantorovich unbalanced optimal transport between two simpl...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_0012_2d-HK-interpolation_thumb.png
+
+     :ref:`sphx_glr_auto_examples_plot_0012_2d-HK-interpolation.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_0012_2d-HK-interpolation
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

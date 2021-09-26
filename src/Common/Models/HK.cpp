@@ -1,13 +1,13 @@
-#include"WFR.h"
+#include"HK.h"
 
 template<class TGeometry>
-TParticleContainer ModelWFR_Interpolate(const TSparsePosContainer& couplingData,
+TParticleContainer ModelHK_Interpolate(const TSparsePosContainer& couplingData,
 		const double * const muXEff, const double * const muYEff,
 		const double * const muX, const double * const muY,
 		const double * const posX, const double * const posY,
-		const int dim, const double t, const double WFScale,
+		const int dim, const double t, const double HKscale,
 		const TGeometry& geometry) {
-	// compute displacement interpolation for WFR distance
+	// compute displacement interpolation for HK distance
 	
 	// couplingData contains coupling data as TSparsePosContainer.
 	//  couplingData.mass: particle masses,
@@ -87,7 +87,7 @@ TParticleContainer ModelWFR_Interpolate(const TSparsePosContainer& couplingData,
 	result.pos.resize(result.nParticles*dim);
 
 	
-	// iterate over moving particles and set result to WFR interpolation
+	// iterate over moving particles and set result to HK interpolation
 	for(int i=0;i<couplingData.nParticles;i++) {
 		// compute distance between start and end point
 		double dist=geometry.dist(posX+(couplingData.posStart[i]*dim), posY+(couplingData.posEnd[i]*dim),dim);
@@ -97,7 +97,7 @@ TParticleContainer ModelWFR_Interpolate(const TSparsePosContainer& couplingData,
 		double m1=couplingData.mass[i]*muY[couplingData.posEnd[i]]/muYEff[couplingData.posEnd[i]];
 		
 		// intermediate mass of particle at time t
-		double mT=std::pow(1-t,2)*m0 + std::pow(t,2)*m1+2*t*(1-t)*std::sqrt(m0*m1)*std::cos(dist/WFScale);
+		double mT=std::pow(1-t,2)*m0 + std::pow(t,2)*m1+2*t*(1-t)*std::sqrt(m0*m1)*std::cos(dist/HKscale);
 		
 		// set interpolated mass in result
 		result.mass[i]=mT;
@@ -109,11 +109,11 @@ TParticleContainer ModelWFR_Interpolate(const TSparsePosContainer& couplingData,
 			
 			// "angle" at intermediate position
 			double phi=std::acos(
-					((1-t)*std::sqrt(m0)+t*std::sqrt(m1)*std::cos(dist/WFScale))/
+					((1-t)*std::sqrt(m0)+t*std::sqrt(m1)*std::cos(dist/HKscale))/
 					std::sqrt(mT)
 					);
 			// transform into relative position along geodesic (in un-scaled setting phi equals the distance that has been travelled)
-			phi=phi/dist*WFScale;
+			phi=phi/dist*HKscale;
 			// invoke call to geodesic computer to transform relative position into position
 			geometry.geodesic(
 				posX+(couplingData.posStart[i]*dim),
@@ -157,7 +157,7 @@ TParticleContainer ModelWFR_Interpolate(const TSparsePosContainer& couplingData,
 	return result;
 }
 
-template TParticleContainer ModelWFR_Interpolate<TGeometry_Euclidean>(const TSparsePosContainer& couplingData,
+template TParticleContainer ModelHK_Interpolate<TGeometry_Euclidean>(const TSparsePosContainer& couplingData,
 		const double * const muXEff, const double * const muYEff,
 		const double * const muX, const double * const muY,
 		const double * const posX, const double * const posY,

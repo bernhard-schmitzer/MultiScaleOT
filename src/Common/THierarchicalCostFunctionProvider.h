@@ -68,11 +68,11 @@ class THierarchicalCostFunctionProvider_SquaredEuclidean : public THierarchicalC
 public:
 
 	double scale; // global rescaling parameter for Euclidean distance
-	double WFScale; // rescaling of unbalanced influence: first divide all distancey by WFScale
-			// then multiply total cost by WFScale**2
-			// this changes maximal transport distance to pi/2*WFScale;
-	double WFScaleSqr; // avoid recomputing square of this all the time
-	bool WFmode; // whether to compute cost function for Wasserstein--Fisher--Rao distance instead
+	double HKscale; // rescaling of unbalanced influence: first divide all distancey by HKscale
+			// then multiply total cost by HKscale**2
+			// this changes maximal transport distance to pi/2*HKscale;
+	double HKscaleSqr; // avoid recomputing square of this all the time
+	bool HKmode; // whether to compute cost function for Hellinger--Kantorovich distance instead
 	
 	THierarchicalCostFunctionProvider_SquaredEuclidean(
 		double **_xPos, double **_yPos,
@@ -81,8 +81,8 @@ public:
 		bool _haveDuals,
 		double **_alpha, double **_beta,
 		double _scale,
-		bool _WFmode,
-		double _WFScale);
+		bool _HKmode,
+		double _HKscale);
 
 	THierarchicalCostFunctionProvider_SquaredEuclidean(
 		double **_xPos, double **_yPos,
@@ -103,7 +103,7 @@ public:
 			0) {};
 
 	void setScale(const double _scale);
-	void setWFScale(const double _WFScale);
+	void setHKscale(const double _HKscale);
 	double getCostAsym(int layerX, int x, int layerY, int y);
 };
 

@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2d Image Interpolation &mdash; MultiScaleOT 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1d Barycenter with Sinkhorn" href="plot_0020_1d-barycenter.html" />
+    <link rel="prev" title="1d Sparse Sinkhorn" href="plot_0010_multiscale-setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MultiScaleOT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_0010_multiscale-setup.html">1d Sparse Sinkhorn</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2d Image Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_0020_1d-barycenter.html">1d Barycenter with Sinkhorn</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Module reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiScaleOT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Examples</a> &raquo;</li>
+        
+      <li>2d Image Interpolation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/auto_examples/plot_0011_2d-image-interpolation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-0011-2d-image-interpolation-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="d-image-interpolation">
+<span id="sphx-glr-auto-examples-plot-0011-2d-image-interpolation-py"></span><h1>2d Image Interpolation<a class="headerlink" href="#d-image-interpolation" title="Permalink to this headline">¶</a></h1>
+<p>This example computes the optimal transport between two simple 2-dimensional images and then generates a simple approximation of the displacement interpolation</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="kn">import</span> <span class="nn">MultiScaleOT</span>
+
+<span class="c1"># Create two images: a square and one rotated by 45deg</span>
+<span class="c1"># with approximately equal areas</span>
+
+<span class="n">hierarchyDepth</span><span class="o">=</span><span class="mi">7</span> <span class="c1"># feel free to play with this value, up to 7 (i.e. 128x128 images) it should be quite low-weight</span>
+<span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">hierarchyDepth</span>
+<span class="n">nLayers</span><span class="o">=</span><span class="n">hierarchyDepth</span><span class="o">+</span><span class="mi">1</span>
+
+<span class="c1"># Square</span>
+<span class="n">img1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+<span class="n">thresh</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">img1</span><span class="p">[</span><span class="n">thresh</span><span class="p">:</span><span class="o">-</span><span class="n">thresh</span><span class="p">,</span><span class="n">thresh</span><span class="p">:</span><span class="o">-</span><span class="n">thresh</span><span class="p">]</span><span class="o">=</span><span class="mf">1.</span>
+<span class="n">img1</span><span class="o">=</span><span class="n">img1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img1</span><span class="p">)</span>
+
+<span class="c1"># Diamond</span>
+<span class="n">img2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">-</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">-</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">img2</span><span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="n">img2</span><span class="o">&lt;</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">img2</span><span class="o">=</span><span class="n">img2</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img2</span><span class="p">)</span>
+
+<span class="c1"># Simple visualization</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0011_2d-image-interpolation_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0011_2d-image-interpolation_001.png" />
+<p>Aux function for extracting weighted point clouds from images</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extractMeasureFromImage</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">zeroThresh</span><span class="o">=</span><span class="mf">1E-14</span><span class="p">):</span>
+    <span class="n">dim</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="n">pos</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dim</span><span class="o">+</span><span class="p">(</span><span class="mi">2</span><span class="p">,),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+    <span class="n">pos</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">pos</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">keep</span><span class="o">=</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">&gt;</span><span class="n">zeroThresh</span><span class="p">)</span>
+    <span class="n">mu</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">keep</span><span class="p">]</span>
+    <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">mu</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span>
+
+<span class="c1"># extract measures from images</span>
+<span class="n">mu1</span><span class="p">,</span><span class="n">pos1</span><span class="o">=</span><span class="n">extractMeasureFromImage</span><span class="p">(</span><span class="n">img1</span><span class="p">)</span>
+<span class="n">mu2</span><span class="p">,</span><span class="n">pos2</span><span class="o">=</span><span class="n">extractMeasureFromImage</span><span class="p">(</span><span class="n">img2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Setup multi-scale solver</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate multi-scale representations</span>
+<span class="n">MultiScaleSetup1</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">TMultiScaleSetup</span><span class="p">(</span><span class="n">pos1</span><span class="p">,</span><span class="n">mu1</span><span class="p">,</span><span class="n">hierarchyDepth</span><span class="p">,</span><span class="n">childMode</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">MultiScaleSetup2</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">TMultiScaleSetup</span><span class="p">(</span><span class="n">pos2</span><span class="p">,</span><span class="n">mu2</span><span class="p">,</span><span class="n">hierarchyDepth</span><span class="p">,</span><span class="n">childMode</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># generate a cost function object</span>
+<span class="n">costFunction</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">THierarchicalCostFunctionProvider_SquaredEuclidean</span><span class="p">(</span>
+        <span class="n">MultiScaleSetup1</span><span class="p">,</span><span class="n">MultiScaleSetup2</span><span class="p">)</span>
+<span class="c1"># eps scaling</span>
+<span class="n">epsScalingHandler</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">TEpsScalingHandler</span><span class="p">()</span>
+<span class="n">epsScalingHandler</span><span class="o">.</span><span class="n">setupGeometricMultiLayerB</span><span class="p">(</span><span class="n">nLayers</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">4.</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># error goal</span>
+<span class="n">errorGoal</span><span class="o">=</span><span class="mf">1E-3</span>
+<span class="c1"># sinkhorn solver object</span>
+<span class="n">SinkhornSolver</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">TSinkhornSolverStandard</span><span class="p">(</span><span class="n">epsScalingHandler</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span><span class="n">hierarchyDepth</span><span class="p">,</span><span class="n">errorGoal</span><span class="p">,</span>
+        <span class="n">MultiScaleSetup1</span><span class="p">,</span><span class="n">MultiScaleSetup2</span><span class="p">,</span><span class="n">costFunction</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>Solve</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">SinkhornSolver</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">SinkhornSolver</span><span class="o">.</span><span class="n">solve</span><span class="p">())</span>
+<span class="n">t2</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;solving time: &quot;</span><span class="p">,</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0
+solving time:  7.5812976360321045
+</pre></div>
+</div>
+<p>Extract coupling data in a suitable sparse data structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">couplingData</span><span class="o">=</span><span class="n">SinkhornSolver</span><span class="o">.</span><span class="n">getKernelPosData</span><span class="p">()</span>
+<span class="c1"># couplingData is a container for the coupling data in scipy.sparse.coo_matrix format</span>
+<span class="c1"># by calling the method couplingData.getDataTuple() one could obtain the list of</span>
+<span class="c1"># non-zero values and their row and column indices</span>
+
+<span class="c1"># we plug this into a simple routine for approximating the displacement interpolation at some time t</span>
+<span class="n">t</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="n">interpData</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">interpolateEuclidean</span><span class="p">(</span><span class="n">couplingData</span><span class="p">,</span><span class="n">pos1</span><span class="p">,</span><span class="n">pos2</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<span class="c1"># interpData is a container of particle masses and coordinates</span>
+<span class="c1"># these can be extracted via interpData.getDataTuple()</span>
+<span class="n">muT</span><span class="p">,</span><span class="n">posT</span><span class="o">=</span><span class="n">interpData</span><span class="o">.</span><span class="n">getDataTuple</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>the intermediate measure can in principle be visualized as a weighted point cloud
+this can be slow on large images and also may not give a very good visual impression of the measure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">posT</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">posT</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="n">muT</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">muT</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0011_2d-image-interpolation_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0011_2d-image-interpolation_002.png" />
+<p>alternatively, the point cloud can be rasterized to an image of suitable dimensions
+particle coordinates are assumed to be pixels (one pixel has length 1, origin at (0,0))
+one may need to rescale coordinates appropriately before calling the function
+and one has to provide a suitable target image
+the target image is allocated:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reImg</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+<span class="c1"># rasterize</span>
+<span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">projectInterpolation</span><span class="p">(</span><span class="n">interpData</span><span class="p">,</span><span class="n">reImg</span><span class="p">)</span>
+<span class="c1"># show rasterization</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">reImg</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0011_2d-image-interpolation_003.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0011_2d-image-interpolation_003.png" />
+<p>now do this for a whole sequence of times</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nT</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">tList</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="n">num</span><span class="o">=</span><span class="n">nT</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">nT</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tList</span><span class="p">):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">nT</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># create displacement interpolations and rasterize them to image</span>
+    <span class="n">interpData</span><span class="o">=</span><span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">interpolateEuclidean</span><span class="p">(</span><span class="n">couplingData</span><span class="p">,</span><span class="n">pos1</span><span class="p">,</span><span class="n">pos2</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">reImg</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+    <span class="n">MultiScaleOT</span><span class="o">.</span><span class="n">projectInterpolation</span><span class="p">(</span><span class="n">interpData</span><span class="p">,</span><span class="n">reImg</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">reImg</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_0011_2d-image-interpolation_004.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_0011_2d-image-interpolation_004.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  12.413 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-0011-2d-image-interpolation-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/7a503ff93bfd9b2900d0fd1d47df324d/plot_0011_2d-image-interpolation.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_0011_2d-image-interpolation.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/af56be9650b8c5e7daace603f6a89ee8/plot_0011_2d-image-interpolation.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_0011_2d-image-interpolation.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="plot_0020_1d-barycenter.html" class="btn btn-neutral float-right" title="1d Barycenter with Sinkhorn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="plot_0010_multiscale-setup.html" class="btn btn-neutral float-left" title="1d Sparse Sinkhorn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Bernhard Schmitzer
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

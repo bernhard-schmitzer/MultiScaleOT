@@ -171,12 +171,16 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.__init__">__init__() (MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean method)</a>
+      <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean.__init__">__init__() (MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean method)</a>
 
       <ul>
+        <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.__init__">(MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean method)</a>
+</li>
         <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup.__init__">(MultiScaleOT.TMultiScaleSetup method)</a>
 </li>
         <li><a href="reference_solver_barycenter.html#MultiScaleOT.TMultiScaleSetupBarycenterContainer.__init__">(MultiScaleOT.TMultiScaleSetupBarycenterContainer method)</a>
+</li>
+        <li><a href="reference_periphery.html#MultiScaleOT.TParticleContainer.__init__">(MultiScaleOT.TParticleContainer method)</a>
 </li>
         <li><a href="reference_solver_barycenter.html#MultiScaleOT.TSinkhornSolverBarycenter.__init__">(MultiScaleOT.TSinkhornSolverBarycenter method)</a>
 </li>
@@ -195,6 +199,10 @@
         <li><a href="reference_solver_unbalanced.html#MultiScaleOT.TSoftMarginalFunctionKL.__init__">(MultiScaleOT.TSoftMarginalFunctionKL method)</a>
 </li>
         <li><a href="reference_solver_unbalanced.html#MultiScaleOT.TSoftMarginalFunctionL1.__init__">(MultiScaleOT.TSoftMarginalFunctionL1 method)</a>
+</li>
+        <li><a href="reference_periphery.html#MultiScaleOT.TSparseCSRContainer.__init__">(MultiScaleOT.TSparseCSRContainer method)</a>
+</li>
+        <li><a href="reference_periphery.html#MultiScaleOT.TSparsePosContainer.__init__">(MultiScaleOT.TSparsePosContainer method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -273,6 +281,14 @@
 </li>
       <li><a href="reference_solver_barycenter.html#MultiScaleOT.TSinkhornSolverBarycenter.getCostFunctionProvider">getCostFunctionProvider() (MultiScaleOT.TSinkhornSolverBarycenter method)</a>
 </li>
+      <li><a href="reference_periphery.html#MultiScaleOT.TParticleContainer.getDataTuple">getDataTuple() (MultiScaleOT.TParticleContainer method)</a>
+
+      <ul>
+        <li><a href="reference_periphery.html#MultiScaleOT.TSparseCSRContainer.getDataTuple">(MultiScaleOT.TSparseCSRContainer method)</a>
+</li>
+        <li><a href="reference_periphery.html#MultiScaleOT.TSparsePosContainer.getDataTuple">(MultiScaleOT.TSparsePosContainer method)</a>
+</li>
+      </ul></li>
       <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup.getDepth">getDepth() (MultiScaleOT.TMultiScaleSetup method)</a>
 </li>
       <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup.getDual">getDual() (MultiScaleOT.TMultiScaleSetup method)</a>
@@ -359,8 +375,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference_solver_standard.html#MultiScaleOT.TSinkhornSolverBase.initialize">initialize() (MultiScaleOT.TSinkhornSolverBase method)</a>
 </li>
+      <li><a href="reference_periphery.html#MultiScaleOT.interpolateEuclidean">interpolateEuclidean() (in module MultiScaleOT)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference_periphery.html#MultiScaleOT.interpolateEuclideanHK">interpolateEuclideanHK() (in module MultiScaleOT)</a>
+</li>
       <li><a href="reference_solver_standard.html#MultiScaleOT.TSinkhornSolverBase.iterate">iterate() (MultiScaleOT.TSinkhornSolverBase method)</a>
 </li>
   </ul></td>
@@ -411,6 +431,8 @@
 </li>
       <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup.setDual">setDual() (MultiScaleOT.TMultiScaleSetup method)</a>
 </li>
+      <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setHKscale">setHKscale() (MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean method)</a>
+</li>
       <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup.setInterpolationMode">setInterpolationMode() (MultiScaleOT.TMultiScaleSetup method)</a>
 </li>
       <li><a href="reference_solver_unbalanced.html#MultiScaleOT.TSinkhornSolverSoftMarginal.setKappa">setKappa() (MultiScaleOT.TSinkhornSolverSoftMarginal method)</a>
@@ -419,10 +441,10 @@
 </li>
       <li><a href="reference_solver_barycenter.html#MultiScaleOT.TMultiScaleSetupBarycenterContainer.setMarginal">setMarginal() (MultiScaleOT.TMultiScaleSetupBarycenterContainer method)</a>
 </li>
-      <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setScale">setScale() (MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setScale">setScale() (MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean method)</a>
+</li>
       <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup.setup">setup() (MultiScaleOT.TMultiScaleSetup method)</a>
 </li>
       <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup.setupDuals">setupDuals() (MultiScaleOT.TMultiScaleSetup method)</a>
@@ -441,8 +463,6 @@
 </li>
       <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup.setupRadii">setupRadii() (MultiScaleOT.TMultiScaleSetup method)</a>
 </li>
-      <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean.setWFScale">setWFScale() (MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean method)</a>
-</li>
       <li><a href="reference_solver_standard.html#MultiScaleOT.TSinkhornSolverBase.solve">solve() (MultiScaleOT.TSinkhornSolverBase method)</a>
 </li>
       <li><a href="reference_solver_standard.html#MultiScaleOT.TSinkhornSolverBase.solveLayer">solveLayer() (MultiScaleOT.TSinkhornSolverBase method)</a>
@@ -459,11 +479,15 @@
 </li>
       <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider">THierarchicalCostFunctionProvider (class in MultiScaleOT)</a>
 </li>
+      <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_PEuclidean">THierarchicalCostFunctionProvider_PEuclidean (class in MultiScaleOT)</a>
+</li>
       <li><a href="reference_solver_aux.html#MultiScaleOT.THierarchicalCostFunctionProvider_SquaredEuclidean">THierarchicalCostFunctionProvider_SquaredEuclidean (class in MultiScaleOT)</a>
 </li>
       <li><a href="reference_multiscale.html#MultiScaleOT.TMultiScaleSetup">TMultiScaleSetup (class in MultiScaleOT)</a>
 </li>
       <li><a href="reference_solver_barycenter.html#MultiScaleOT.TMultiScaleSetupBarycenterContainer">TMultiScaleSetupBarycenterContainer (class in MultiScaleOT)</a>
+</li>
+      <li><a href="reference_periphery.html#MultiScaleOT.TParticleContainer">TParticleContainer (class in MultiScaleOT)</a>
 </li>
       <li><a href="reference_solver_barycenter.html#MultiScaleOT.TSinkhornSolverBarycenter">TSinkhornSolverBarycenter (class in MultiScaleOT)</a>
 </li>
@@ -486,6 +510,10 @@
       <li><a href="reference_solver_unbalanced.html#MultiScaleOT.TSoftMarginalFunctionKL">TSoftMarginalFunctionKL (class in MultiScaleOT)</a>
 </li>
       <li><a href="reference_solver_unbalanced.html#MultiScaleOT.TSoftMarginalFunctionL1">TSoftMarginalFunctionL1 (class in MultiScaleOT)</a>
+</li>
+      <li><a href="reference_periphery.html#MultiScaleOT.TSparseCSRContainer">TSparseCSRContainer (class in MultiScaleOT)</a>
+</li>
+      <li><a href="reference_periphery.html#MultiScaleOT.TSparsePosContainer">TSparsePosContainer (class in MultiScaleOT)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -48,6 +48,20 @@ py::tuple getSparsePosDataTuple(const TSparsePosContainer &posData);
 // extract python representation of data from TParticleContainer
 py::tuple getParticleDataTuple(const TParticleContainer &particleData);
 
+
+// create TSparseCSRContainer from raw data
+TSparseCSRContainer getSparseCSRContainerFromData(
+        const TDoubleMatrix * const data,
+        const TInteger32Matrix * const indices, const TInteger32Matrix * const indptr,
+        const int xres, const int yres);
+
+// create TSparseCSRContainer from python data
+TSparseCSRContainer getSparseCSRContainerFromData(
+        py::array_t<double> &data,
+        py::array_t<int> &indices, py::array_t<int> &indptr,
+        const int xres, const int yres);
+
+
 // create TSparsePosContainer from raw data
 TSparsePosContainer getSparsePosContainerFromData(
         const TDoubleMatrix * const mass,

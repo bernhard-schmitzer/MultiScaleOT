@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Periphery functions &mdash; MultiScaleOT 0.3.0 documentation</title>
+  <title>Periphery functions and classes &mdash; MultiScaleOT 0.3.0 documentation</title>
   
 
   
@@ -92,7 +92,11 @@
 <li class="toctree-l2"><a class="reference internal" href="reference_solver_standard.html">Sinkorn solver (standard)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_solver_unbalanced.html">Sinkorn solver (unbalanced)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_solver_barycenter.html">Barycenters</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Periphery functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Periphery functions and classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-structures-for-couplings-and-weighted-point-clouds">Data structures for couplings and weighted point clouds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#displacement-interpolation">Displacement interpolation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -142,7 +146,7 @@
         
           <li><a href="reference.html">Module reference</a> &raquo;</li>
         
-      <li>Periphery functions</li>
+      <li>Periphery functions and classes</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -161,9 +165,113 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="periphery-functions">
-<h1>Periphery functions<a class="headerlink" href="#periphery-functions" title="Permalink to this headline">¶</a></h1>
-<p>Some functions that can be used, for instance, for post-processing of optimal solutions.</p>
+  <div class="section" id="periphery-functions-and-classes">
+<h1>Periphery functions and classes<a class="headerlink" href="#periphery-functions-and-classes" title="Permalink to this headline">¶</a></h1>
+<p>Some functions that can be used, for instance, for post-processing of optimal solutions. This includes numerical approximation of the displacement interpolation.</p>
+<div class="section" id="data-structures-for-couplings-and-weighted-point-clouds">
+<h2>Data structures for couplings and weighted point clouds<a class="headerlink" href="#data-structures-for-couplings-and-weighted-point-clouds" title="Permalink to this headline">¶</a></h2>
+<p>First two sparse data structures for storing kernel / coupling matrix information. They are implementations of the scipy.sparse.csr_matrix and coo_matrix formats.
+Coupling information in these data structures can usually be obtained from a Sinkhorn solver object after solving by calling the appropriate method.</p>
+<dl class="class">
+<dt id="MultiScaleOT.TSparseCSRContainer">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TSparseCSRContainer</code><a class="headerlink" href="#MultiScaleOT.TSparseCSRContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sparse container for coupling data, using the scipy.sparse.csr_matrix format.</p>
+<dl class="method">
+<dt id="MultiScaleOT.TSparseCSRContainer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSparseCSRContainer, data: numpy.ndarray[numpy.float64], indices: numpy.ndarray[numpy.int32], indptr: numpy.ndarray[numpy.int32], xres: int, yres: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TSparseCSRContainer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSparseCSRContainer.getDataTuple">
+<code class="sig-name descname">getDataTuple</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSparseCSRContainer</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#MultiScaleOT.TSparseCSRContainer.getDataTuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of non-zero entries, column indices, and row separation indices.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="MultiScaleOT.TSparsePosContainer">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TSparsePosContainer</code><a class="headerlink" href="#MultiScaleOT.TSparsePosContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sparse container for coupling data, using the scipy.sparse.coo_matrix format.</p>
+<dl class="method">
+<dt id="MultiScaleOT.TSparsePosContainer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSparsePosContainer, mass: numpy.ndarray[numpy.float64], posX: numpy.ndarray[numpy.int32], posY: numpy.ndarray[numpy.int32], xres: int, yres: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TSparsePosContainer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TSparsePosContainer.getDataTuple">
+<code class="sig-name descname">getDataTuple</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TSparsePosContainer</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#MultiScaleOT.TSparsePosContainer.getDataTuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of non-zero values, row and column indices.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The next data structure is for a list of particles. For example, such objects are generated by the displacement interpolation methods from coupling data objects.</p>
+<dl class="class">
+<dt id="MultiScaleOT.TParticleContainer">
+<em class="property">class </em><code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">TParticleContainer</code><a class="headerlink" href="#MultiScaleOT.TParticleContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Container for list of mass particles, contains an array of masses and an array for locations.</p>
+<dl class="method">
+<dt id="MultiScaleOT.TParticleContainer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TParticleContainer, mass: numpy.ndarray[numpy.float64], pos: numpy.ndarray[numpy.float64]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.TParticleContainer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> – 1d double array of particle masses</p></li>
+<li><p><strong>pos</strong> – 2d double array of particle locations</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="MultiScaleOT.TParticleContainer.getDataTuple">
+<code class="sig-name descname">getDataTuple</code><span class="sig-paren">(</span><em class="sig-param">self: MultiScaleOT.TParticleContainer</em><span class="sig-paren">)</span> &#x2192; tuple<a class="headerlink" href="#MultiScaleOT.TParticleContainer.getDataTuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of masses and positions.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="displacement-interpolation">
+<h2>Displacement interpolation<a class="headerlink" href="#displacement-interpolation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="MultiScaleOT.interpolateEuclidean">
+<code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">interpolateEuclidean</code><span class="sig-paren">(</span><em class="sig-param">couplingData: MultiScaleOT.TSparsePosContainer, posX: numpy.ndarray[numpy.float64], posY: numpy.ndarray[numpy.float64], t: float</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.TParticleContainer<a class="headerlink" href="#MultiScaleOT.interpolateEuclidean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute displacement interpolation for Wasserstein-p distance in Euclidean space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>couplingData</strong> – TSparsePosContainer containing non-zero entries of coupling in sparse POS format</p></li>
+<li><p><strong>posX</strong> – 2d numpy.float64 array containing positions of first marginal points</p></li>
+<li><p><strong>posY</strong> – 2d numpy.float64 array containing positions of second marginal points</p></li>
+<li><p><strong>t</strong> – float in [0,1], gives time at which to compute interpolation. t=0: first marginal, t=1: second marginal, t=0.5: midpoint.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="MultiScaleOT.interpolateEuclideanHK">
+<code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">interpolateEuclideanHK</code><span class="sig-paren">(</span><em class="sig-param">couplingData: MultiScaleOT.TSparsePosContainer, muXEff: numpy.ndarray[numpy.float64], muYEff: numpy.ndarray[numpy.float64], muX: numpy.ndarray[numpy.float64], muY: numpy.ndarray[numpy.float64], posX: numpy.ndarray[numpy.float64], posY: numpy.ndarray[numpy.float64], t: float, HKscale: float</em><span class="sig-paren">)</span> &#x2192; MultiScaleOT.TParticleContainer<a class="headerlink" href="#MultiScaleOT.interpolateEuclideanHK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute displacement interpolation for Hellinger–Kantorovich distance in Euclidean space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>couplingData</strong> – TSparsePosContainer containing non-zero entries of coupling in sparse POS format</p></li>
+<li><p><strong>muXEff</strong> – first marginal of coupling (which can be different from input measure on first marginal)</p></li>
+<li><p><strong>muYEff</strong> – second marginal of coupling</p></li>
+<li><p><strong>muX</strong> – input measure on first marginal</p></li>
+<li><p><strong>muY</strong> – input measure on second marginal</p></li>
+<li><p><strong>posX</strong> – 2d numpy.float64 array containing positions of first marginal points</p></li>
+<li><p><strong>posY</strong> – 2d numpy.float64 array containing positions of second marginal points</p></li>
+<li><p><strong>t</strong> – float in [0,1], gives time at which to compute interpolation. t=0: first marginal, t=1: second marginal, t=0.5: midpoint.</p></li>
+<li><p><strong>HKscale</strong> – scale parameter determining trade-off between transport and mass change. Maximal travelling distance is given by pi/2*HKscale.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="function">
 <dt id="MultiScaleOT.projectInterpolation">
 <code class="sig-prename descclassname">MultiScaleOT.</code><code class="sig-name descname">projectInterpolation</code><span class="sig-paren">(</span><em class="sig-param">particles: MultiScaleOT.TParticleContainer, img: numpy.ndarray[numpy.float64]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#MultiScaleOT.projectInterpolation" title="Permalink to this definition">¶</a></dt>
@@ -179,6 +287,7 @@
 <p>The mass of each particle is split to the nearest pixels of img, weighted by the relative position along each axis.</p>
 </dd></dl>
 
+</div>
 </div>
 
 
