@@ -109,6 +109,12 @@ public:
 			_setup, _setupDuals, _setupRadii) {};
 	TMultiScaleSetup(TDoubleMatrix *posMatrix, double *_mu, int _depth) : TMultiScaleSetup(posMatrix, _mu, _depth, THierarchyBuilder::CM_Grid,
 			true, true, true) {};
+			
+	TMultiScaleSetup(THierarchyBuilder *_HB, double **_posH, double *_mu, int _res, int _dim,
+			bool _setupDuals, bool _setupRadii
+			);
+	TMultiScaleSetup(THierarchyBuilder *_HB, double **_posH, double *_mu, int _res, int _dim) :
+			TMultiScaleSetup(_HB,_posH,_mu,_res,_dim,true,true) {};
 
 	TMultiScaleSetup(const TMultiScaleSetup&) = delete;
 	TMultiScaleSetup(TMultiScaleSetup&& b);

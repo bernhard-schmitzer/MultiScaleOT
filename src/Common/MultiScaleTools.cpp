@@ -237,6 +237,58 @@ TMultiScaleSetup::TMultiScaleSetup(double *_pos, double *_mu, int _res, int _dim
 	}
 }
 
+TMultiScaleSetup::TMultiScaleSetup(THierarchyBuilder *_HB, double **_posH, double *_mu, int _res, int _dim,
+		bool _setupDuals, bool _setupRadii
+		) {
+	HB=_HB;
+	depth=HB->layers.size()-1;
+	nLayers=HB->layers.size();
+	pos=_posH[depth];
+	mu=_mu;
+	res=_res;
+	dim=_dim;
+	HierarchyBuilderChildMode=THierarchyBuilder::CM_Manual;
+	
+	HB=_HB;
+	
+	alphaH=NULL;
+	radii=NULL;
+	neighboursH=NULL;
+	
+	eprintf("\tconverting\n");
+	// convert to format used by hierarchical solver
+	HP=HB->convert();
+	eprintf("\tresH\n");
+	// get hierarchical cardinalities of each marginal on each level
+	resH=HB->getResH();
+	
+	// hierarchical positions
+	// position of nodes in coarser hierarchy levels
+	eprintf("\tposH\n");
+	posH=HB->allocateDoubleSignal(dim);
+	for(int i=0;i<depth+1;i++) {
+		std::memcpy(posH[i],_posH[i],sizeof(double)*resH[i]*dim);
+	}
+	
+	// hierarchical masses
+	// combined masses of nodes in coarser hierarchy levels
+	eprintf("\tmuH\n");
+	muH=HB->allocateDoubleSignal(1);
+	HP->computeHierarchicalMasses(mu,muH);
+
+	eprintf("\trest of setup\n");
+
+	eprintf("\tduals\n");
+	if(_setupDuals) {
+		SetupDuals();
+	}
+	eprintf("\tradii\n");
+	if(_setupRadii) {
+		radii=HB->allocateDoubleSignal(1);
+		HB->getSignalRadiiExplicit(posH,radii);
+	}
+}
+
 
 TMultiScaleSetup::TMultiScaleSetup(TMultiScaleSetup&& b) {
 	pos=b.pos;

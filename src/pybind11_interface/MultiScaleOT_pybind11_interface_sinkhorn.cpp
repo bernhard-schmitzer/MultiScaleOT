@@ -211,7 +211,37 @@ void init_sinkhorn(py::module_ &m) {
             
             Returns:
                 A tuple of an int32 array and a double array, containing indices and effective cost values of dominating kernel entries.)"
-        );
+        )
+        .def("setSafeMode", [](TSinkhornSolverStandard * SinkhornSolver, bool safeMode) {
+            SinkhornSolver->kernelGenerator.useSafeMode=safeMode;
+            })
+        .def("setFixDuals", [](TSinkhornSolverStandard * SinkhornSolver, bool fixDuals) {
+            SinkhornSolver->kernelGenerator.useFixDuals=fixDuals;
+            })
+        .def("setSafeCTransform", [](TSinkhornSolverStandard * SinkhornSolver, bool safeCTransform) {
+            SinkhornSolver->safeCTransform=safeCTransform;
+            })
+        .def("getU", [](const TSinkhornSolverStandard * const SinkhornSolver) {
+            return getArrayFromRaw<double>(SinkhornSolver->u.data(), SinkhornSolver->u.size());
+            })
+        .def("getV", [](const TSinkhornSolverStandard * const SinkhornSolver) {
+            return getArrayFromRaw<double>(SinkhornSolver->v.data(), SinkhornSolver->v.size());
+            })
+        .def("setU", [](TSinkhornSolverStandard * SinkhornSolver, py::array_t<double> &_u) {
+            py::buffer_info buffer=_u.request();
+            if(SinkhornSolver->xres!=buffer.shape[0]) throw std::invalid_argument("u size does not match layer size.");
+
+            std::memcpy(SinkhornSolver->u.data(),buffer.ptr,sizeof(double)*SinkhornSolver->xres);
+            },
+            py::arg("v"))
+        .def("setV", [](TSinkhornSolverStandard * SinkhornSolver, py::array_t<double> &_v) {
+            py::buffer_info buffer=_v.request();
+            if(SinkhornSolver->yres!=buffer.shape[0]) throw std::invalid_argument("v size does not match layer size.");
+
+            std::memcpy(SinkhornSolver->v.data(),buffer.ptr,sizeof(double)*SinkhornSolver->yres);
+            },
+            py::arg("v"));
+
         
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 

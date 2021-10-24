@@ -181,9 +181,9 @@ int TSinkhornSolverBase::solve() {
 		msg=solveLayer();
 		if(msg!=0) return msg;
 		if(layer<layerFinest) {
-			msg=refineDuals(layer+1);
-			if(msg!=0) return msg;
 			msg=changeLayer(layer+1);
+			if(msg!=0) return msg;
+			msg=refineDuals(layer);
 			if(msg!=0) return msg;
 		} else {
 			if (cfg.generateFinalKernel) {
@@ -232,7 +232,7 @@ TSinkhornSolverStandard::TSinkhornSolverStandard(
 	muY=NULL;
 	alpha=NULL;
 	beta=NULL;
-
+	safeCTransform=false;
 
 }
 
@@ -252,6 +252,20 @@ int TSinkhornSolverStandard::refineDuals(const int newLayer) {
 	if(newLayer>0) {
 		HPX->signal_refine_double(alphaH[newLayer-1],alphaH[newLayer],newLayer-1);
 		HPY->signal_refine_double(betaH[newLayer-1],betaH[newLayer],newLayer-1);
+	}
+	if(safeCTransform) {
+		eprintf("\tperforming safe c-transform for alpha and beta\n");
+		THierarchicalDualMaximizer::getMaxDual(HPX, HPY,
+			alphaH, betaH, newLayer,
+			costProvider,
+			0);
+		HPX->signal_propagate_double(alphaH, 0, newLayer, THierarchicalPartition::MODE_MAX);
+		THierarchicalDualMaximizer::getMaxDual(HPX, HPY,
+			alphaH, betaH, newLayer,
+			costProvider,
+			1);
+		HPY->signal_propagate_double(betaH, 0, newLayer, THierarchicalPartition::MODE_MAX);
+
 	}
 	kernelValid=false;
 	return 0;
@@ -338,6 +352,7 @@ int TSinkhornSolverStandard::iterate(const int n) {
 		v=muYVec.cwiseQuotient(kernelT*u);
 	}
 	if( (!u.allFinite()) || (!v.allFinite()) ) {
+		eprintf("\tNAN in scaling. aborting!\n");
 		return MSG_NANSCALING;
 	}
 	return 0;

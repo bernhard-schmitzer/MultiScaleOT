@@ -53,9 +53,9 @@ TKernelMatrix TSinkhornKernelGenerator::generate(double _eps, double _slack, boo
 	}
 
 	// safe mode: detect empty cols and rows and fix them
-	std::vector<bool> foundRow;
-	std::vector<bool> foundCol;
 	if(safeMode) {
+		std::vector<bool> foundRow;
+		std::vector<bool> foundCol;
 		// indicators, which col or row has at least one entry
 		foundRow.resize(xres,false);
 		foundCol.resize(yres,false);

@@ -4,6 +4,7 @@
 
 const int THierarchyBuilder::CM_Tree=0;
 const int THierarchyBuilder::CM_Grid=1;
+const int THierarchyBuilder::CM_Manual=2;
 const double THierarchyBuilder::boxTolerance=1.E-10;
 
 
@@ -11,18 +12,41 @@ THierarchyBuilder::THierarchyBuilder(double *_points, int _nPoints, int _dim,
 		int _childMode, int partitionDepth) :
 		points(_points), nPoints(_nPoints), dim(_dim), childMode(_childMode) {
 	
-	if (partitionDepth>0) {
-		setBox();
-		setRoot();
-		// refine
-		for(int i=0;i<partitionDepth-1;i++) {
-			refine();
+	if (childMode != CM_Manual) {
+		if (partitionDepth>0) {
+			setBox();
+			setRoot();
+			// refine
+			for(int i=0;i<partitionDepth-1;i++) {
+				refine();
+			}
+		}
+		addAtomicLayer();
+	}
+		
+}
+
+void THierarchyBuilder::manualAddLayer(int _nNodes, int *_parents, int *_nChildren, int **_children, int *_nLeaves, int **_leaves) {
+
+	int nNodes=_nNodes;
+	
+	layers.resize(layers.size()+1);
+	int layerId=layers.size()-1;
+
+	layers[layerId].nodes.resize(_nNodes);
+	for(int i=0;i<nNodes;i++) {
+		layers[layerId].nodes[i].parent=_parents[i];
+		if (_nChildren!=NULL) {
+			layers[layerId].nodes[i].children.resize(_nChildren[i]);
+			std::memcpy(layers[layerId].nodes[i].children.data(),_children[i],sizeof(int)*_nChildren[i]);
+			
+		}
+		if (_nLeaves!=NULL) {
+			layers[layerId].nodes[i].leaves.resize(_nLeaves[i]);
+			std::memcpy(layers[layerId].nodes[i].leaves.data(),_leaves[i],sizeof(int)*_nLeaves[i]);
 		}
 	}
-	addAtomicLayer();
-	
-	}
-
+}
 
 void THierarchyBuilder::setBox() {
 	boxLo.resize(dim);

@@ -6,6 +6,7 @@
 #include<Common/Verbose.h>
 
 #include<Common/THierarchicalPartition.h>
+#include<Common/MultiScaleTools.h>
 #include<Sinkhorn/TSinkhornKernel.h>
 
 // abstract base class for sparse multi-scale sinkhorn type algorithm with eps scaling
@@ -58,7 +59,7 @@ public:
 
 	int layer; // currently active layer
 	double eps; // currently active eps
-	
+		
 	bool kernelValid; // keeps track whether the currently held kernel matches the current problem setup (eps, absorption status etc.)
 
 
@@ -117,6 +118,9 @@ public:
 
 	// some info on current layer
 	double *muX,*muY,*alpha,*beta;
+	
+	// another safety mechanism: compute stable (soft) c-transform of alpha after refining, before generating the first new kernel
+	bool safeCTransform;
 
 
 	TSinkhornSolverStandard(

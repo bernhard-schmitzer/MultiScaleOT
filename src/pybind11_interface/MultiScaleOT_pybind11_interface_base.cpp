@@ -710,8 +710,67 @@ PYBIND11_MODULE(MultiScaleOT, m) {
                         MultiScaleSetupX->alphaH, MultiScaleSetupY->alphaH, layerFinest,
                         costProvider,
                         mode);
-            },"Compute c-transform (or hierarchical approximation thereof). Experimental.");
+                if(mode==0) {
+                    MultiScaleSetupX->HP->signal_propagate_double(MultiScaleSetupX->alphaH, 0, layerFinest, THierarchicalPartition::MODE_MAX);
+                } else {
+                    MultiScaleSetupY->HP->signal_propagate_double(MultiScaleSetupY->alphaH, 0, layerFinest, THierarchicalPartition::MODE_MAX);
+                }
+            },
+            py::arg("MultiScaleSetupX"),
+            py::arg("MultiScaleSetupY"),
+            py::arg("costFunctionProvider"), py::arg("layerFinest"),py::arg("mode"),
+            "Compute c-transform (or hierarchical approximation thereof). Experimental. mode=0: compute alpha, mode=1: compute beta");
             
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+    m.def("getTMultiScaleSetup_explicit",
+            [](py::array_t<double> &mu, py::list pyChildren, py::list pyLeaves, py::list pyParents, py::list pyPosH) {
+            int nLayers=pyPosH.size();
+
+            vector<double*> posH(nLayers);
+            int nPoints=0;
+            int dim=0;
+            for(int i=0;i<nLayers;i++) {
+                py::buffer_info buffer=pyPosH[i].cast<py::array_t<double>>().request();
+                posH[i]=(double*) buffer.ptr;
+                //eprintf("\t%e\n",posH[i][0]);
+                if(i==nLayers-1) {
+                    nPoints=buffer.shape[0];
+                    dim=buffer.shape[1];
+                }
+            }
+            
+            THierarchyBuilder *HB;
+            HB=new THierarchyBuilder(posH[nLayers-1],nPoints,dim,THierarchyBuilder::CM_Manual,0);
+            
+                        
+            for(int i=0;i<nLayers-1;i++) {
+                py::buffer_info buffer_parents=pyParents[i].cast<py::array_t<int>>().request();
+                int *parents=(int*) buffer_parents.ptr;
+                std::vector<int> nChildren, nLeaves;
+                std::vector<int*> children, leaves;
+                extractListData(pyChildren[i], nChildren, children);
+                extractListData(pyLeaves[i], nLeaves, leaves);
+                HB->manualAddLayer(nChildren.size(), parents, nChildren.data(), children.data(), nLeaves.data(), leaves.data());
+                
+            }
+            eprintf("final layer\n");
+            // last layer: manually, since does not have children or leaves
+            py::buffer_info buffer_parents=pyParents[nLayers-1].cast<py::array_t<int>>().request();
+            int *parents=(int*) buffer_parents.ptr;
+                
+            HB->manualAddLayer(buffer_parents.shape[0], parents, NULL, NULL, NULL, NULL);
+            eprintf("completed HB\n");
+            py::buffer_info buffer_mu=mu.request();
+            
+            TMultiScaleSetup *result= new TMultiScaleSetup(HB, posH.data(), (double*) buffer_mu.ptr, nPoints, dim,true,true);
+            eprintf("created MultiScaleSetup\n");
+                        
+            
+            return result;
+            },
+            py::arg("mu"), py::arg("children"), py::arg("leaves"), py::arg("parents"), py::arg("posH")
+            );
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
     m.def("setVerboseMode", [](bool verbose) { verbose_mode=verbose; }, "Set verbose mode",

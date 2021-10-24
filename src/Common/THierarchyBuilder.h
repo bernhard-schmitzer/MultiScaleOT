@@ -27,6 +27,7 @@ class THierarchyBuilder {
 public:
 	static const int CM_Tree;
 	static const int CM_Grid;
+	static const int CM_Manual;
 	static const double boxTolerance;
 	
 	double *points;
@@ -38,7 +39,9 @@ public:
 	
 	THierarchyBuilder(double *_points, int _nPoints, int _dim,
 			int _childMode, int partitionDepth);
-		
+	
+	void manualAddLayer(int _nNodes, int *_parents, int *_nChildren, int **_children, int *_nLeaves, int **_leaves);
+	
 	void setBox();
 	void setRoot();
 	void refine();
